@@ -27,11 +27,11 @@ public function cargar($idUsuario, $usNombre, $usPass, $usMail, $usDeshabilitado
 
 }
 
-public function getId(){
+public function getIdUsuario(){
     return $this->idUsuario;
 }
 
-public function setId($idUsuario){
+public function setIdUsuario($idUsuario){
     $this->idUsuario = $idUsuario;
 }
 
@@ -78,13 +78,13 @@ public function setMensajeOperacion($mensajeOperacion){
 public function buscar(){
     $resp = false;
     $base = new BaseDatos();
-    $sql = "SELECT * FROM usuario WHERE idusuario = " . $this->getId();
+    $sql = "SELECT * FROM usuario WHERE idusuario = " . $this->getIdUsuario();
     if ($base->Iniciar()) {
         $res = $base->Ejecutar($sql);
         if ($res > -1) {
             if ($res > 0) {
                 $row = $base->Registro();
-                $this->setId($row['idusuario']);
+                $this->setIdUsuario($row['idusuario']);
                 $this->setUsNombre($row['usnombre']);
                 $this->setUsPass($row['uspass']);
                 $this->setUsMail($row['usmail']);
@@ -128,7 +128,7 @@ public function insertar(){
     $sql = "INSERT INTO usuario(usnombre, uspass, usmail, usdeshabilitado)  VALUES('" . $this->getUsNombre() . "','" . $this->getUsPass() . "','" . $this->getUsMail() . "','" . $this->getUsDeshabilitado() . "')";
     if ($base->Iniciar()) {
         if ($id = $base->Ejecutar($sql)) {
-            $this->setId($id);
+            $this->setIdUsuario($id);
             $resp = true;
         } else {
             $this->setMensajeOperacion("Usuario->insertar: " . $base->getError());
@@ -143,7 +143,7 @@ public function insertar(){
 public function modificar(){
     $resp = false;
     $base = new BaseDatos();
-    $sql = "UPDATE usuario SET usnombre = '" . $this->getUsNombre() . "', uspass = '" . $this->getUsPass() . "', usmail = '" . $this->getUsMail() . "', usdeshabilitado = '" . $this->getUsDeshabilitado() . "' WHERE idusuario = " . $this->getId();
+    $sql = "UPDATE usuario SET usnombre = '" . $this->getUsNombre() . "', uspass = '" . $this->getUsPass() . "', usmail = '" . $this->getUsMail() . "', usdeshabilitado = '" . $this->getUsDeshabilitado() . "' WHERE idusuario = " . $this->getIdUsuario();
     if ($base->Iniciar()) {
         if ($base->Ejecutar($sql)) {
             $resp = true;
@@ -160,7 +160,7 @@ public function modificar(){
 public function eliminar(){
     $resp = false;
     $base = new BaseDatos();
-    $sql = "DELETE FROM usuario WHERE idusuario = " . $this->getId();
+    $sql = "DELETE FROM usuario WHERE idusuario = " . $this->getIdUsuario();
     if ($base->Iniciar()) {
         if ($base->Ejecutar($sql)) {
             $resp = true;

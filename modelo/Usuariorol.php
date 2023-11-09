@@ -1,25 +1,25 @@
 <?php
 
-class MenuRol {
+class UsuarioRol {
 
-    private $idMenu;
+    private $idUsuario;
     private $idRol;
     private $mensajeOperacion;
 
     public function __construct()
     {
-        $this->idMenu = new Menu();
+        $this->idUsuario = new Usuario();
         $this->idRol = new Rol();
         $this->mensajeOperacion = "";
     }
     
-    public function cargar($idMenu, $idRol){
-        $this->setIdMenu($idMenu);
+    public function cargar($idUsuario, $idRol){
+        $this->setIdUsuario($idUsuario);
         $this->setIdRol($idRol);
     }
 
-    public function getIdMenu(){
-        return $this->idMenu;
+    public function getIdUsuario(){
+        return $this->idUsuario;
     }
 
     public function getIdRol(){
@@ -30,8 +30,8 @@ class MenuRol {
         return $this->mensajeOperacion;
     }
 
-    public function setIdMenu($idMenu){
-        $this->idMenu = $idMenu;
+    public function setIdUsuario($idUsuario){
+        $this->idUsuario = $idUsuario;
     }
 
     public function setIdRol($idRol){
@@ -45,17 +45,17 @@ class MenuRol {
     public function buscar(){
         $resp = false;
         $base = new BaseDatos();
-        $sql = "SELECT * FROM menurol WHERE idmenu = ".$this->getIdMenu();
+        $sql = "SELECT * FROM usuariorol WHERE idUsuario = ".$this->getIdUsuario();
         if ($base->Iniciar()) {
             $res = $base->Ejecutar($sql);
             if($res>-1){
                 if($res>0){
                     $row = $base->Registro();
-                    $this->cargar($row['idmenu'], $row['idrol']);
+                    $this->cargar($row['idUsuario'], $row['idRol']);
                 }
             }
         } else {
-            $this->setMensajeOperacion("MenuRol->listar: ".$base->getError());
+            $this->setMensajeOperacion("usuariorol->listar: ".$base->getError());
         }
         return $resp;
     
@@ -65,20 +65,20 @@ class MenuRol {
     public function insertar(){
         $respuesta = false;
         $base = new BaseDatos();
-        $sql = "INSERT INTO menurol (idmenu, idrol)
+        $sql = "INSERT INTO usuariorol (idUsuario, idRol)
         VALUES ('" 
-        . $this->getIdMenu() . "', '" 
+        . $this->getIdUsuario() . "', '" 
         . $this->getIdRol() . 
          "')";
         if ($base->Iniciar()) {
             if ($elid = $base->Ejecutar($sql)) {
-                $this->setIdMenu($elid);
+                $this->setIdUsuario($elid);
                 $respuesta = true;
             } else {
-                $this->setMensajeOperacion("MenuRol->insertar: ".$base->getError());
+                $this->setMensajeOperacion("usuariorol->insertar: ".$base->getError());
             }
         } else {
-            $this->setMensajeOperacion("MenuRol->insertar: ".$base->getError());
+            $this->setMensajeOperacion("usuariorol->insertar: ".$base->getError());
         }
         return $respuesta;
     }
@@ -86,15 +86,15 @@ class MenuRol {
     public function modificar(){
         $resp = false;
         $base = new BaseDatos();
-        $sql="UPDATE menurol SET idmenu='".$this->getIdMenu()."', idrol='".$this->getIdRol();
+        $sql="UPDATE usuariorol SET idUsuario='".$this->getIdUsuario()."', idRol='".$this->getIdRol();
         if ($base->Iniciar()) {
             if ($base->Ejecutar($sql)) {
                 $resp = true;
             } else {
-                $this->setMensajeOperacion("MenuRol->modificar: ".$base->getError());
+                $this->setMensajeOperacion("usuariorol->modificar: ".$base->getError());
             }
         } else {
-            $this->setMensajeOperacion("MenuRol->modificar: ".$base->getError());
+            $this->setMensajeOperacion("usuariorol->modificar: ".$base->getError());
         }
         return $resp;
     }
@@ -102,15 +102,15 @@ class MenuRol {
     public function eliminar(){
         $resp = false;
         $base = new BaseDatos();
-        $sql="DELETE FROM menurol WHERE idmenu=".$this->getIdMenu();
+        $sql="DELETE FROM usuariorol WHERE idUsuario=".$this->getIdUsuario();
         if ($base->Iniciar()) {
             if ($base->Ejecutar($sql)) {
                 return true;
             } else {
-                $this->setMensajeOperacion("MenuRol->eliminar: ".$base->getError());
+                $this->setMensajeOperacion("usuariorol->eliminar: ".$base->getError());
             }
         } else {
-            $this->setMensajeOperacion("MenuRol->eliminar: ".$base->getError());
+            $this->setMensajeOperacion("usuariorol->eliminar: ".$base->getError());
         }
         return $resp;
     }
@@ -118,7 +118,7 @@ class MenuRol {
     public static function listar($parametro=""){
         $arreglo = array();
         $base = new BaseDatos();
-        $sql = "SELECT * FROM menurol ";
+        $sql = "SELECT * FROM usuariorol ";
         if ($parametro!="") {
             $sql.='WHERE '.$parametro;
         }
@@ -127,15 +127,15 @@ class MenuRol {
             if($res>0){
                 
                 while ($row = $base->Registro()){
-                    $obj= new MenuRol();
-                    $obj->cargar($row['idmenu'], $row['idrol']);
+                    $obj= new UsuarioRol();
+                    $obj->cargar($row['idUsuario'], $row['idRol']);
                     array_push($arreglo, $obj);
                 }
                
             }
             
         } else {
-            throw new Exception("Error al listar los menuRoles: " . $base->getError());
+            throw new Exception("Error al listar las compras: " . $base->getError());
         }
  
         return $arreglo;

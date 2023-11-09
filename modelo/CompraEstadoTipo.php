@@ -60,13 +60,13 @@ class CompraEstadoTipo {
     public function buscar(){
         $resp = false;
         $base = new BaseDatos();
-        $sql = "SELECT * FROM compraestadotipo WHERE idCompraEstadoTipo = ".$this->getIdCompraEstadoTipo();
+        $sql = "SELECT * FROM compraestadotipo WHERE idcompraestadotipo = ".$this->getIdCompraEstadoTipo();
         if ($base->Iniciar()) {
             $res = $base->Ejecutar($sql);
             if($res>-1){
                 if($res>0){
                     $row = $base->Registro();
-                    $this->cargar($row['idCompraEstadoTipo'], $row['cetDescripcion'], $row['cetDetalle']);
+                    $this->cargar($row['idcompraestadotipo'], $row['cetdescripcion'], $row['cetdetalle']);
                     
                 }
             }
@@ -79,7 +79,7 @@ class CompraEstadoTipo {
     public function insertar(){
         $respuesta = false;
         $base = new BaseDatos();
-        $sql = "INSERT INTO compraestadotipo (idCompraEstadoTipo, cetDescripcion, cetDetalle)
+        $sql = "INSERT INTO compraestadotipo (idcompraestadotipo, cetdescripcion, cetdetalle)
         VALUES ('" 
         . $this->getIdCompraEstadoTipo() . "', '" 
         . $this->getCetDescripcion() . "', '" 
@@ -100,8 +100,8 @@ class CompraEstadoTipo {
     public function modificar(){
         $resp = false;
         $base = new BaseDatos();
-        $sql="UPDATE compraestadotipo SET cetDescripcion='".$this->getCetDescripcion()."', cetDetalle='".$this->getCetDetalle().
-        "'  WHERE idCompraEstadoTipo=".$this->getIdCompraEstadoTipo();
+        $sql="UPDATE compraestadotipo SET cetdescripcion='".$this->getCetDescripcion()."', cetdetalle='".$this->getCetDetalle().
+        "'  WHERE idcompraestadotipo=".$this->getIdCompraEstadoTipo();
         if ($base->Iniciar()) {
             if ($base->Ejecutar($sql)) {
                 $resp = true;
@@ -117,7 +117,7 @@ class CompraEstadoTipo {
     public function eliminar(){
         $resp = false;
         $base = new BaseDatos();
-        $sql="DELETE FROM compraestadotipo WHERE idCompraEstadoTipo=".$this->getIdCompraEstadoTipo();
+        $sql="DELETE FROM compraestadotipo WHERE idcompraestadotipo=".$this->getIdCompraEstadoTipo();
         if ($base->Iniciar()) {
             if ($base->Ejecutar($sql)) {
                 return true;
@@ -142,12 +142,12 @@ class CompraEstadoTipo {
             if($res>0){
                 while ($row = $base->Registro()){
                     $obj= new CompraEstadoTipo();
-                    $obj->cargar($row['idCompraEstadoTipo'], $row['cetDescripcion'], $row['cetDetalle']);
+                    $obj->cargar($row['idcompraestadotipo'], $row['cetdescripcion'], $row['cetdetalle']);
                     array_push($arreglo, $obj);
                 }
             }
         } else {
-            $this->setMensajeOperacion("CompraEstadoTipo->listar: ".$base->getError());
+            throw new Exception("Error al listar los compraEstadoTipo: " . $base->getError());
         }
         return $arreglo;
     }

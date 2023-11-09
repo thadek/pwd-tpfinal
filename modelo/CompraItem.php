@@ -70,13 +70,13 @@ class CompraItem {
     public function buscar(){
         $resp = false;
         $base = new BaseDatos();
-        $sql = "SELECT * FROM compraitem WHERE idCompraItem = ".$this->getIdCompraItem();
+        $sql = "SELECT * FROM compraitem WHERE idcompraitem = ".$this->getIdCompraItem();
         if ($base->Iniciar()) {
             $res = $base->Ejecutar($sql);
             if($res>-1){
                 if($res>0){
                     $row = $base->Registro();
-                    $this->cargar($row['idCompraItem'], $row['idProducto'], $row['idCompra'], $row['ciCantidad']);
+                    $this->cargar($row['idcompraitem'], $row['idproducto'], $row['idcompra'], $row['cicantidad']);
                     
                 }
             }
@@ -89,7 +89,7 @@ class CompraItem {
     public function insertar(){
         $respuesta = false;
         $base = new BaseDatos();
-        $sql = "INSERT INTO compraitem (idCompraItem, idProducto, idCompra, ciCantidad)
+        $sql = "INSERT INTO compraitem (idcompraitem, idproducto, idcompra, cicantidad)
         VALUES ('" 
         . $this->getIdCompraItem() . "', '" 
         . $this->getIdProducto() . "', '" 
@@ -111,8 +111,8 @@ class CompraItem {
     public function modificar(){
         $resp = false;
         $base = new BaseDatos();
-        $sql="UPDATE compraitem SET idProducto='".$this->getIdProducto()."', idCompra'".$this->getIdCompra()."', ciCantidad'".$this->getCiCantidad().
-        "'  WHERE idCompraItem=".$this->getIdCompraItem();
+        $sql="UPDATE compraitem SET idproducto='".$this->getIdProducto()."', idcompra'".$this->getIdCompra()."', cicantidad'".$this->getCiCantidad().
+        "'  WHERE idcompraitem=".$this->getIdCompraItem();
         if ($base->Iniciar()) {
             if ($base->Ejecutar($sql)) {
                 $resp = true;
@@ -128,7 +128,7 @@ class CompraItem {
     public function eliminar(){
         $resp = false;
         $base = new BaseDatos();
-        $sql="DELETE FROM compraitem WHERE idCompraItem=".$this->getIdCompraItem();
+        $sql="DELETE FROM compraitem WHERE idcompraitem=".$this->getIdCompraItem();
         if ($base->Iniciar()) {
             if ($base->Ejecutar($sql)) {
                 return true;
@@ -153,12 +153,12 @@ class CompraItem {
             if($res>0){
                 while ($row = $base->Registro()){
                     $obj= new CompraItem();
-                    $obj->cargar($row['idCompraItem'], $row['idProducto'], $row['idCompra'], $row['ciCantidad']);
+                    $obj->cargar($row['idcompraitem'], $row['idproducto'], $row['idcompra'], $row['cicantidad']);
                     array_push($arreglo, $obj);
                 }
             }
         } else {
-            $this->setMensajeOperacion("CompraItem->listar: ".$base->getError());
+            throw new Exception("Error al listar las compraItem: " . $base->getError());
         }
         return $arreglo;
     }

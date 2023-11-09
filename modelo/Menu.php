@@ -5,7 +5,8 @@ class Menu {
     private $idMenu;
     private $meNombre;
     private $meDescripcion;
-    private $idPadre; 
+    private $idPadre;
+    private $link;
     private $meDeshabilitado;
     private $mensajeoperacion;
 
@@ -15,16 +16,18 @@ class Menu {
         $this->meNombre = "";
         $this->meDescripcion = "";
         $this->idPadre = "";
+        $this->link = "";
         $this->meDeshabilitado = "";
         $this->mensajeoperacion = "";
         
     }
 
-    public function cargar($idMenu, $meNombre, $meDescripcion, $idPadre, $meDeshabilitado){
+    public function cargar($idMenu, $meNombre, $meDescripcion, $idPadre, $link, $meDeshabilitado){
         $this->setIdMenu($idMenu);
         $this->setMeNombre($meNombre);
         $this->setMeDescripcion($meDescripcion);
         $this->setIdPadre($idPadre);
+        $this->setLink($link);
         $this->setMeDeshabilitado($meDeshabilitado);
     }
 
@@ -44,6 +47,10 @@ class Menu {
 
     public function setIdPadre($idPadre){
         $this->idPadre = $idPadre;
+    }
+
+    public function setLink($link){
+        $this->link = $link;
     }
 
     public function setMeDeshabilitado($meDeshabilitado){
@@ -72,6 +79,10 @@ class Menu {
         return $this->idPadre;
     }
 
+    public function getLink(){
+        return $this->link;
+    }
+
     public function getMeDeshabilitado(){
         return $this->meDeshabilitado;
     }
@@ -83,13 +94,13 @@ class Menu {
     public function buscar(){
         $resp = false;
         $base = new BaseDatos();
-        $sql = "SELECT * FROM menu WHERE idMenu = ".$this->getIdMenu();
+        $sql = "SELECT * FROM menu WHERE idmenu = ".$this->getIdMenu();
         if ($base->Iniciar()) {
             $res = $base->Ejecutar($sql);
             if($res>-1){
                 if($res>0){
                     $row = $base->Registro();
-                    $this->cargar($row['idMenu'], $row['meNombre'], $row['meDescripcion'], $row['idPadre'], $row['meDeshabilitado']);
+                    $this->cargar($row['idmenu'], $row['menombre'], $row['medescripcion'], $row['idpadre'], $row['link'], $row['medeshabilitado']);
                     
                 }
             }
@@ -104,8 +115,8 @@ class Menu {
     public function insertar(){
 		$base = new BaseDatos();
 		$resp = false;
-		$sql = "INSERT INTO menu (idMenu, meNombre, meDescripcion, idPadre, meDeshabilitado)
-				VALUES ('".$this->getIdMenu()."','".$this->getMeNombre()."','".$this->getMeDescripcion()."','".$this->getIdPadre()."','".$this->getMeDeshabilitado()."')";
+		$sql = "INSERT INTO menu (idmenu, meNombre, medescripcion, idpadre, link, medeshabilitado)
+				VALUES ('".$this->getIdMenu()."','".$this->getMeNombre()."','".$this->getMeDescripcion()."','".$this->getIdPadre()."','".$this->getLink()."','".$this->getMeDeshabilitado()."')";
         
         if ($base->Iniciar()) {
     		$idUser = $base->Ejecutar($sql);
@@ -123,9 +134,9 @@ class Menu {
     public function modificar(){
         $resp = false;
         $base = new BaseDatos();
-        $sql="UPDATE menu SET meNombre='".$this->getMeNombre()."', meDescripcion='".$this->getMeDescripcion()."', 
-        idPadre='".$this->getIdPadre()."', meDeshabilitado='".$this->getMeDeshabilitado().
-        "'  WHERE idMenu=".$this->getIdMenu();
+        $sql="UPDATE menu SET menombre='".$this->getMeNombre()."', medescripcion='".$this->getMeDescripcion()."', 
+        idpadre='".$this->getIdPadre()."', link='".$this->getLink()."', medeshabilitado='".$this->getMeDeshabilitado().
+        "'  WHERE idmenu=".$this->getIdMenu();
         if ($base->Iniciar()) {
             if ($base->Ejecutar($sql)) {
                 $resp = true;
@@ -141,7 +152,7 @@ class Menu {
     public function eliminar(){
         $resp = false;
         $base = new BaseDatos();
-        $sql="DELETE FROM menu WHERE idMenu=".$this->getIdMenu();
+        $sql="DELETE FROM menu WHERE idmenu=".$this->getIdMenu();
         if ($base->Iniciar()) {
             if ($base->Ejecutar($sql)) {
                 return true;
@@ -167,14 +178,14 @@ class Menu {
                 
                 while ($row = $base->Registro()){
                     $obj= new Menu();
-                    $obj->cargar($row['idMenu'], $row['meNombre'], $row['meDescripcion'], $row['idPadre'], $row['meDeshabilitado']);
+                    $obj->cargar($row['idmenu'], $row['menombre'], $row['medescripcion'], $row['idpadre'], $row['link'], $row['medeshabilitado']);
                     array_push($arreglo, $obj);
                 }
                
             }
             
         } else {
-            $this->setMensajeOperacion("Menu->listar: ".$base->getError());
+            throw new Exception("Error al listar los menus: " . $base->getError());
         }
  
         return $arreglo;
