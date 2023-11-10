@@ -2,7 +2,29 @@
 
 class ABMcompraEstadoTipo{
 
-        /**
+    public function abm($datos){
+        $resp = false;
+        if($datos['accion']=='editar'){
+            if($this->modificacion($datos)){
+                $resp = true;
+            }
+        }
+        if($datos['accion']=='borrar'){
+            if($this->baja($datos)){
+                $resp =true;
+            }
+        }
+        if($datos['accion']=='nuevo'){
+            if($this->alta($datos)){
+                $resp =true;
+            }
+            
+        }
+        return $resp;
+
+    }
+
+    /**
      * Espera como parametro un arreglo asociativo donde las claves coinciden con los nombres de las variables instancias del objeto
      * @param array $param
      * @return Tabla
