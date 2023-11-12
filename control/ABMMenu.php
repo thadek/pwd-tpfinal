@@ -1,5 +1,7 @@
 <?php
-class ABMCompraItem{
+class ABMMenu{
+    //Espera como parametro un arreglo asociativo donde las claves coinciden con los nombres de las variables instancias del objeto
+
     
     public function abm($datos){
         $resp = false;
@@ -17,10 +19,11 @@ class ABMCompraItem{
             if($this->alta($datos)){
                 $resp =true;
             }
+            
         }
         return $resp;
-    }
 
+    }
     /**
      * Espera como parametro un arreglo asociativo donde las claves coinciden con los nombres de las variables instancias del objeto
      * @param array $param
@@ -29,10 +32,9 @@ class ABMCompraItem{
     private function cargarObjeto($param){
         $obj = null;
            
-        if( array_key_exists('idcompraitem',$param)  and array_key_exists('idproducto',$param)
-        and array_key_exists('idcompra',$param) and array_key_exists('cicantidad',$param)){
-            $obj = new CompraItem();
-            $obj->cargar($param['idcompraitem'],$param['idproducto'],$param['idcompra'],$param['cicantidad']);
+        if( array_key_exists('id',$param) and array_key_exists('nombre',$param) and array_key_exists('descripcion',$param) and array_key_exists('idpadre',$param) and array_key_exists('link',$param) and array_key_exists('deshabilitado',$param)){
+            $obj = new Menu();
+            $obj->cargar($param['id'], $param['nombre'], $param['descripcion'], $param['idpadre'],$param['link'], $param['deshabilitado']);
         }
         return $obj;
     }
@@ -42,12 +44,12 @@ class ABMCompraItem{
      * @param array $param
      * @return Tabla
      */
-    
     private function cargarObjetoConClave($param){
         $obj = null;
-        if( isset($param['idcompraitem']) ){
-            $obj = new CompraItem();
-            $obj->cargar($param['idcompraitem'], null,null,null,null);
+        
+        if( isset($param['id']) ){
+            $obj = new Menu();
+            $obj->setIdMenu($param['id']);
         }
         return $obj;
     }
@@ -61,24 +63,27 @@ class ABMCompraItem{
     
     private function seteadosCamposClaves($param){
         $resp = false;
-        if (isset($param['idcompraitem']))
+        if (isset($param['id'])){
             $resp = true;
+        }
         return $resp;
     }
     
+    /**
+     * 
+     * @param array $param
+     */
     public function alta($param){
         $resp = false;
-        $param['idcompraitem'] =null;
+        $param['id'] =null;
         $elObjtTabla = $this->cargarObjeto($param);
 //        verEstructura($elObjtTabla);
         if ($elObjtTabla!=null and $elObjtTabla->insertar()){
             $resp = true;
-            
         }
         return $resp;
         
     }
-
     /**
      * permite eliminar un objeto 
      * @param array $param
@@ -112,7 +117,7 @@ class ABMCompraItem{
         }
         return $resp;
     }
- 
+    
     /**
      * permite buscar un objeto
      * @param array $param
@@ -121,19 +126,49 @@ class ABMCompraItem{
     public function buscar($param){
         $where = " true ";
         if ($param<>NULL){
-            if  (isset($param['idcompraitem']))
-                $where.=" and idcompraitem =".$param['idcompraitem'];
-            if  (isset($param['idproducto']))
-                 $where.=" and idproducto ='".$param['idproducto']."'";
-            if  (isset($param['idcompra']))
-                 $where.=" and idcompra ='".$param['idcompra']."'";
-            if  (isset($param['cicantidad']))
-                 $where.=" and cicantidad ='".$param['cicantidad']."'";
+            if  (isset($param['id']))
+                $where.=" and idmenu =".$param['id'];
+            if  (isset($param['idpadre']))
+                 $where.=" and idpadre ='".$param['nombre']."'";
+            if(isset($param['medeshabilitado']))
+                $where.=" and medeshabilitado IS NULL";
+            
         }
-        $obj = new CompraItem();
+
+        $obj = new Menu();
         $arreglo = $obj->listar($where);
-        return $arreglo;
+
+        return $arreglo;  
     }
     
+
+    /**
+     * Dado un id de rol, devuelve un arreglo de objetos Menu asociados a ese rol
+     * @param int $idRol
+     * @return array<Menu>
+     */
+    public function obtenerMenuPorRol($idRol){
+
+        $obj = new MenuRol();
+        $arr_menurol = $obj->listar("idRol = ".$idRol);
+        $arr_menus = array();
+        foreach ($arr_menurol as $menurol) {
+            $param['id'] = $menurol->getIdMenu();
+            $param['medeshabilitado'] = 'NULL';
+            $menu = $this->buscar($param);
+            if($menu!=null){
+                $menu = $menu[0];
+                array_push($arr_menus,$menu);
+            }
+          
+           
+        }
+        return $arr_menus;
+    }
+
+
+  
+
+
 }
 ?>

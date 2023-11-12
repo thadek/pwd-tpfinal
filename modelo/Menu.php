@@ -5,7 +5,7 @@ class Menu {
     private $idMenu;
     private $meNombre;
     private $meDescripcion;
-    private $idPadre;
+    private $padre;
     private $link;
     private $meDeshabilitado;
     private $mensajeoperacion;
@@ -15,18 +15,18 @@ class Menu {
         $this->idMenu = "";
         $this->meNombre = "";
         $this->meDescripcion = "";
-        $this->idPadre = "";
+        $this->padre = "";
         $this->link = "";
         $this->meDeshabilitado = "";
         $this->mensajeoperacion = "";
         
     }
 
-    public function cargar($idMenu, $meNombre, $meDescripcion, $idPadre, $link, $meDeshabilitado){
+    public function cargar($idMenu, $meNombre, $meDescripcion, $padre, $link, $meDeshabilitado){
         $this->setIdMenu($idMenu);
         $this->setMeNombre($meNombre);
         $this->setMeDescripcion($meDescripcion);
-        $this->setIdPadre($idPadre);
+        $this->setPadre($padre);
         $this->setLink($link);
         $this->setMeDeshabilitado($meDeshabilitado);
     }
@@ -45,8 +45,8 @@ class Menu {
         $this->meDescripcion = $meDescripcion;
     }
 
-    public function setIdPadre($idPadre){
-        $this->idPadre = $idPadre;
+    public function setPadre($padre){
+        $this->padre = $padre;
     }
 
     public function setLink($link){
@@ -75,8 +75,8 @@ class Menu {
         return $this->meDescripcion;
     }
 
-    public function getIdPadre(){
-        return $this->idPadre;
+    public function getPadre(){
+        return $this->padre;
     }
 
     public function getLink(){
@@ -100,7 +100,19 @@ class Menu {
             if($res>-1){
                 if($res>0){
                     $row = $base->Registro();
-                    $this->cargar($row['idmenu'], $row['menombre'], $row['medescripcion'], $row['idpadre'], $row['link'], $row['medeshabilitado']);
+                    if(isset($row['idpadre'])){
+                        $padre = new Menu();
+                        $padre->setIdMenu($row['idpadre']);
+                        $padre->buscar();
+                         // Comparo para que no se genere un bucle infinito
+                        if($padre->getIdMenu() != $this->getIdMenu()){
+                            $this->cargar($row['idmenu'], $row['menombre'], $row['medescripcion'], $padre, $row['link'], $row['medeshabilitado']);
+                        } else {
+                            $this->cargar($row['idmenu'], $row['menombre'], $row['medescripcion'], null, $row['link'], $row['medeshabilitado']);
+                        }
+                    }
+                    
+                   
                     
                 }
             }
@@ -115,8 +127,8 @@ class Menu {
     public function insertar(){
 		$base = new BaseDatos();
 		$resp = false;
-		$sql = "INSERT INTO menu (idmenu, meNombre, medescripcion, idpadre, link, medeshabilitado)
-				VALUES ('".$this->getIdMenu()."','".$this->getMeNombre()."','".$this->getMeDescripcion()."','".$this->getIdPadre()."','".$this->getLink()."','".$this->getMeDeshabilitado()."')";
+		$sql = "INSERT INTO menu (idmenu, menombre, medescripcion, idpadre, link, medeshabilitado)
+				VALUES ('".$this->getIdMenu()."','".$this->getMeNombre()."','".$this->getMeDescripcion()."','".$this->getPadre()->getIdMenu()."','".$this->getLink()."','".$this->getMeDeshabilitado()."')";
         
         if ($base->Iniciar()) {
     		$idUser = $base->Ejecutar($sql);
@@ -135,7 +147,7 @@ class Menu {
         $resp = false;
         $base = new BaseDatos();
         $sql="UPDATE menu SET menombre='".$this->getMeNombre()."', medescripcion='".$this->getMeDescripcion()."', 
-        idpadre='".$this->getIdPadre()."', link='".$this->getLink()."', medeshabilitado='".$this->getMeDeshabilitado().
+        idpadre='".$this->getPadre()->getIdMenu()."', link='".$this->getLink()."', medeshabilitado='".$this->getMeDeshabilitado().
         "'  WHERE idmenu=".$this->getIdMenu();
         if ($base->Iniciar()) {
             if ($base->Ejecutar($sql)) {
@@ -155,7 +167,7 @@ class Menu {
         $sql="DELETE FROM menu WHERE idmenu=".$this->getIdMenu();
         if ($base->Iniciar()) {
             if ($base->Ejecutar($sql)) {
-                return true;
+                $resp = true;
             } else {
                 $this->setMensajeOperacion("Menu->eliminar: ".$base->getError());
             }
@@ -178,7 +190,15 @@ class Menu {
                 
                 while ($row = $base->Registro()){
                     $obj= new Menu();
-                    $obj->cargar($row['idmenu'], $row['menombre'], $row['medescripcion'], $row['idpadre'], $row['link'], $row['medeshabilitado']);
+                    if($row['idpadre']){
+                        $padre = new Menu();
+                        $padre->setIdMenu($row['idpadre']);
+                        $padre->buscar();
+                        $obj->cargar($row['idmenu'], $row['menombre'], $row['medescripcion'], $padre, $row['link'], $row['medeshabilitado']);
+                    }else{
+                        $obj->cargar($row['idmenu'], $row['menombre'], $row['medescripcion'], null, $row['link'], $row['medeshabilitado']);
+                    }
+                    
                     array_push($arreglo, $obj);
                 }
                

@@ -1,4 +1,7 @@
 <?php
+
+use AbmRol as GlobalAbmRol;
+
 class ABMRol{
     //Espera como parametro un arreglo asociativo donde las claves coinciden con los nombres de las variables instancias del objeto
 
@@ -148,4 +151,16 @@ class ABMRol{
         return $arreglo;   
     }
     
+
+    public static function obtenerRolVisitante(){
+        $obj = new AbmRol();
+        $param['rodescripcion'] = 'Visitante';
+        $arreglo = $obj->buscar($param);
+        $salida = null;
+        if(count($arreglo)>0){
+            $salida = $arreglo[0];
+        }
+        return $salida;
+    }
+
 }

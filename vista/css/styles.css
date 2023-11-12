@@ -1,0 +1,113 @@
+.bg-navbar{
+    background:rgba(14, 14, 15, 0.473);
+}
+
+.linea{
+    width:100%;
+    height:.2vh;
+    display:flex;
+    opacity:0.1;
+   
+    background: linear-gradient(124deg, #ff2400, #e81d1d, #e8b71d, #e3e81d, #1de840, #1ddde8, #2b1de8, #dd00f3, #dd00f3);
+    background-size: 1500% 1500%;
+    -webkit-animation: rainbow 28s ease infinite;
+    -z-animation: rainbow 28s ease infinite;
+    -o-animation: rainbow 28s ease infinite;
+    animation: rainbow 28s ease infinite;
+    opacity:1;
+  }
+  @-webkit-keyframes rainbow {
+    0%{background-position:0% 82%}
+    50%{background-position:100% 19%}
+    100%{background-position:0% 82%}
+  }
+  @-moz-keyframes rainbow {
+    0%{background-position:0% 82%}
+    50%{background-position:100% 19%}
+    100%{background-position:0% 82%}
+  }
+  @-o-keyframes rainbow {
+    0%{background-position:0% 82%}
+    50%{background-position:100% 19%}
+    100%{background-position:0% 82%}
+  }
+  @keyframes rainbow {
+    0%{background-position:0% 82%}
+    50%{background-position:100% 19%}
+    100%{background-position:0% 82%}
+  }
+  
+  
+
+
+
+footer{
+    margin-top:1em;
+}
+
+.cont{
+    display:flex;
+    flex-direction:column;
+    min-height:80vh;
+    justify-content:center;
+    align-items:center;
+    font-family:'Roboto', sans-serif;
+}
+
+.cont h1{
+    font-size:5em;
+    color:#fff;
+    text-align:center;
+}
+
+.cont h2{
+    font-size:2em;
+    color:#fff;
+    text-align:center;
+}
+
+.cont p{
+    font-size:1em;
+    padding:1em;
+    color:#fff;
+    text-align:center;
+}
+
+
+.img-autos{
+  background:url("../img/patentes.png"); 
+  background-size:cover;
+  height:500px;
+  border-radius: 5px 0 0 5px;
+}
+
+.img-autosAbs{
+  background:url("../img/patentes.png"); 
+  background-size:cover;
+  height:100%;
+  border-radius: 5px 0 0 5px;
+}
+
+.img-personas{
+  background:url("../img/personas.png"); 
+  background-size:cover;
+  height:100%;
+  border-radius: 5px 0 0 5px;
+}
+
+
+.img-personaAbs{
+  background:url("../img/personas.png"); 
+  background-size:cover;
+  height:500px;
+  border-radius: 5px 0 0 5px;
+}
+
+.col-sinp{
+    padding: 0;
+}
+
+.card{
+  background:transparent;
+}
+
