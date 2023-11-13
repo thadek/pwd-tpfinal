@@ -14,16 +14,9 @@
     </button>
 
     <div class="collapse navbar-collapse" id="navegacion">
-        
-
-
-            <?php
-            echo $menu_dinamico;
-            ?>
-        
-
-       
-
+    <?php
+        echo $menu_dinamico;
+    ?>
     </div>
 
     <?php 

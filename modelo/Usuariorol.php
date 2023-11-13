@@ -2,40 +2,40 @@
 
 class UsuarioRol {
 
-    private $idUsuario;
-    private $idRol;
+    private $usuario;
+    private $rol;
     private $mensajeOperacion;
 
     public function __construct()
     {
-        $this->idUsuario = new Usuario();
-        $this->idRol = new Rol();
+        $this->usuario = new Usuario();
+        $this->rol = new Rol();
         $this->mensajeOperacion = "";
     }
     
-    public function cargar($idUsuario, $idRol){
-        $this->setIdUsuario($idUsuario);
-        $this->setIdRol($idRol);
+    public function cargar($usuario, $rol){
+        $this->setUsuario($usuario);
+        $this->setRol($rol);
     }
 
-    public function getIdUsuario(){
-        return $this->idUsuario;
+    public function getUsuario(){
+        return $this->usuario;
     }
 
-    public function getIdRol(){
-        return $this->idRol;
+    public function getRol(){
+        return $this->rol;
     }
 
     public function getMensajeOperacion(){
         return $this->mensajeOperacion;
     }
 
-    public function setIdUsuario($idUsuario){
-        $this->idUsuario = $idUsuario;
+    public function setUsuario($usuario){
+        $this->usuario = $usuario;
     }
 
-    public function setIdRol($idRol){
-        $this->idRol = $idRol;
+    public function setRol($rol){
+        $this->rol = $rol;
     }
 
     public function setMensajeOperacion($mensajeOperacion){
@@ -45,13 +45,18 @@ class UsuarioRol {
     public function buscar(){
         $resp = false;
         $base = new BaseDatos();
-        $sql = "SELECT * FROM usuariorol WHERE idUsuario = ".$this->getIdUsuario();
+        $sql = "SELECT * FROM usuariorol WHERE idusuario = ".$this->getUsuario()->getIdUsuario()." AND idrol = ".$this->getRol()->getIdRol();
         if ($base->Iniciar()) {
             $res = $base->Ejecutar($sql);
             if($res>-1){
                 if($res>0){
                     $row = $base->Registro();
-                    $this->cargar($row['idUsuario'], $row['idRol']);
+                    $usr = new Usuario();
+                    $usr->setIdUsuario($row['idUsuario']);
+                    $rol = new Rol();
+                    $rol->setIdRol($row['idRol']);
+
+                    $this->cargar($usr,$rol);
                 }
             }
         } else {
@@ -65,14 +70,14 @@ class UsuarioRol {
     public function insertar(){
         $respuesta = false;
         $base = new BaseDatos();
-        $sql = "INSERT INTO usuariorol (idUsuario, idRol)
+        $sql = "INSERT INTO usuariorol (idusuario, idrol)
         VALUES ('" 
-        . $this->getIdUsuario() . "', '" 
-        . $this->getIdRol() . 
+        . $this->getUsuario()->getIdUsuario() . "', '" 
+        . $this->getRol()->getIdRol() . 
          "')";
         if ($base->Iniciar()) {
             if ($elid = $base->Ejecutar($sql)) {
-                $this->setIdUsuario($elid);
+               // $this->setIdUsuario($elid);
                 $respuesta = true;
             } else {
                 $this->setMensajeOperacion("usuariorol->insertar: ".$base->getError());
@@ -86,7 +91,7 @@ class UsuarioRol {
     public function modificar(){
         $resp = false;
         $base = new BaseDatos();
-        $sql="UPDATE usuariorol SET idUsuario='".$this->getIdUsuario()."', idRol='".$this->getIdRol();
+        $sql="UPDATE usuariorol SET idusuario='".$this->getUsuario()->getIdUsuario()."', idrol='".$this->getRol()->getIdRol();
         if ($base->Iniciar()) {
             if ($base->Ejecutar($sql)) {
                 $resp = true;
@@ -102,7 +107,7 @@ class UsuarioRol {
     public function eliminar(){
         $resp = false;
         $base = new BaseDatos();
-        $sql="DELETE FROM usuariorol WHERE idUsuario=".$this->getIdUsuario();
+        $sql="DELETE FROM usuariorol WHERE idusuario=".$this->getUsuario()->getIdUsuario(). " AND idrol=".$this->getRol()->getIdRol();
         if ($base->Iniciar()) {
             if ($base->Ejecutar($sql)) {
                 return true;
@@ -128,14 +133,20 @@ class UsuarioRol {
                 
                 while ($row = $base->Registro()){
                     $obj= new UsuarioRol();
-                    $obj->cargar($row['idUsuario'], $row['idRol']);
+                    $usr = new Usuario();
+                    $usr->setIdUsuario($row['idusuario']);
+                    $usr->buscar();
+                    $rol = new Rol();
+                    $rol->setIdRol($row['idrol']);
+                    $rol->buscar();
+                    $obj->cargar($usr,$rol);
                     array_push($arreglo, $obj);
                 }
                
             }
             
         } else {
-            throw new Exception("Error al listar las compras: " . $base->getError());
+            throw new Exception("Error al listar los usuarioRol: " . $base->getError());
         }
  
         return $arreglo;

@@ -1,6 +1,5 @@
 <?php
 
-use AbmRol as GlobalAbmRol;
 
 class ABMRol{
     //Espera como parametro un arreglo asociativo donde las claves coinciden con los nombres de las variables instancias del objeto
@@ -152,9 +151,28 @@ class ABMRol{
     }
     
 
+    /**
+     * Devuelve un objeto rol con el nombre 'Visitante'
+     * @return Rol
+     */
     public static function obtenerRolVisitante(){
         $obj = new AbmRol();
-        $param['rodescripcion'] = 'Visitante';
+        $param['rodescripcion'] = 'visitante';
+        $arreglo = $obj->buscar($param);
+        $salida = null;
+        if(count($arreglo)>0){
+            $salida = $arreglo[0];
+        }
+        return $salida;
+    }
+
+
+    /**
+     * Devuelve un objeto rol con el nombre 'Cliente'
+     */
+    public static function obtenerRolCliente(){
+        $obj = new AbmRol();
+        $param['rodescripcion'] = 'cliente';
         $arreglo = $obj->buscar($param);
         $salida = null;
         if(count($arreglo)>0){

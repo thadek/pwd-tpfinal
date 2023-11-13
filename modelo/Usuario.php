@@ -125,7 +125,7 @@ public static function listar($condicion = ""){
 public function insertar(){
     $resp = false;
     $base = new BaseDatos();
-    $sql = "INSERT INTO usuario(usnombre, uspass, usmail, usdeshabilitado)  VALUES('" . $this->getUsNombre() . "','" . $this->getUsPass() . "','" . $this->getUsMail() . "','" . $this->getUsDeshabilitado() . "')";
+    $sql = "INSERT INTO usuario(usnombre, uspass, usmail)  VALUES('" . $this->getUsNombre() . "','" . $this->getUsPass() . "','" . $this->getUsMail(). "')";
     if ($base->Iniciar()) {
         if ($id = $base->Ejecutar($sql)) {
             $this->setIdUsuario($id);

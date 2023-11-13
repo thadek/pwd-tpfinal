@@ -2,22 +2,7 @@
 
 include_once("../configuracion.php");
 include_once("../estructura/header.php");
-autorizar(["visitante","admin"]);
-
-
-/*$abmMenu = new AbmMenu();
-
-$listaMenu  = $abmMenu->obtenerMenusPorRol(2);
-
-
-foreach($listaMenu as $menu){
-
-        echo $menu->getMeNombre();
-        echo $menu->getLink();
-        echo "<br>";
-
-} 
-*/
+//autorizar(["visitante","admin","cliente"]);
 ?>
 
 

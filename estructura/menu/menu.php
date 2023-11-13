@@ -7,6 +7,8 @@ $menu  = $abmMenu->obtenerMenuPorRol($rol);
 
 
 
+
+
 /**
  * Funcion que recibe un array de objetos Menu y un objeto Menu y 
  * devuelve un string con el submenu renderizado. Renderiza también los submenus de 3er nivel
@@ -99,29 +101,41 @@ $menu_dinamico = renderizarMenu($menu);
 
 $botonIniciarSesion =
     <<<INICIAR_SESION
- <a class="nav-link"  href="../vista/login.php">
+ <a class="btn btn-dark"  href={$LOGIN}>
  <i class="fa-solid fa-right-to-bracket"></i> Iniciar sesión</a>
 INICIAR_SESION;
 
 
 $subMenuUsuario =  $botonIniciarSesion;
 if ($session->validar()) {
-    $subMenuUsuario = "<a class='nav-link' href='../vista/usuario.php'>Usuario</a>";
+    $subMenuUsuario = <<<SUBMENUSR
+    <div class="nav-item dropdown menu-usr">
+    <button class="btn btn-dark dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+    <i class="fa-regular fa-user"></i> 
+          </button>
+    <ul class="dropdown-menu dropdown-menu-end dropdown-menu-dark">
+    <h6 class="dropdown-header">Hola, {$session->getUsuario()->getUsNombre()}</h6>
+      <li><a class="dropdown-item" href="../vista/usuario.php"><i class="fa-regular fa-circle-user"></i> Mi cuenta</a></li>
+      <li><a class="dropdown-item" href="../vista/logout.php"> <i class="fa-solid fa-right-from-bracket"></i> Cerrar sesión</a></li>
+    </ul>
+  </div>
+    
+SUBMENUSR;
 }
 
 $carritoMenu =
     <<<CARRITO
-<a class="nav-link" href="../vista/carrito.php">
-<i class="fa-solid fa-cart-shopping"></i> Carrito</a>
+<a class="btn btn-dark " href="../vista/carrito.php">
+<i class="fa-solid fa-cart-shopping"></i> </a>
 
 CARRITO;
 
 $navegacionDerecha =
     <<<NAVEGACION_DERECHA
 <div class="collapse navbar-collapse justify-content-end" id="navegacion">
-<ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+<ul class="navbar-nav mr-auto mt-2 mt-lg-0 gap-2">
 <li class="nav-item">
-{$botonIniciarSesion}
+{$subMenuUsuario}
 </li>
 <li class="nav-item">
 {$carritoMenu}

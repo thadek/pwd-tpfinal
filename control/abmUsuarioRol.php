@@ -32,12 +32,15 @@ class abmUsuarioRol {
     private function cargarObjeto($param)
     {
         $obj = null;
-        if (array_key_exists('idusuariorol', $param)) {
+        if (isset($param['idrol']) && isset($param['idusuario'])) {
 
             $obj = new Usuariorol();
-            $obj->cargar(
-                $param['idusuariorol'],$param['idusuario'],$param['idrol']   
-            );
+            $usuario = new Usuario();
+            $usuario->setIdUsuario($param['idusuario']);
+            $rol = new Rol();
+            $rol->setIdRol($param['idrol']);
+            $obj->cargar($usuario, $rol);
+         
         }
         return $obj;
     }
@@ -129,8 +132,6 @@ class abmUsuarioRol {
         $where = " true "; 
         if ($param<>NULL){
             $where .= '';
-            if  (isset($param['idusuariorol']))
-                $where.=" and idusuariorol ='".$param['idusuariorol']."'"; 
             if  (isset($param['idusuario']))
                     $where.=" and idusuario ='".$param['idusuario']."'";
             if  (isset($param['idrol']))
@@ -140,4 +141,22 @@ class abmUsuarioRol {
         $arreglo =  $obj->listar($where);  
         return $arreglo;
     }
+
+    /**
+     * Setea el rol cliente por defecto al usuario que se registra.
+     */
+    public function setearRolDefault($idUsuario){
+        $salida = false;
+        $param['idusuario'] = $idUsuario;
+        $abmRol = new abmRol();   
+        $rolCliente = $abmRol->obtenerRolCliente();
+        $param['idrol'] = $rolCliente->getIdRol();
+
+        $obj = $this->cargarObjeto($param);
+        if ($obj != null && $obj->getUsuario()->getIdUsuario() != null && $obj->getRol()->getIdRol() != null && $obj->insertar()) {
+           $salida = true;
+        }
+        return $salida;
+    }
+    
 }

@@ -23,6 +23,9 @@ class Session {
         //Si obtengo un resultado, es porque el usuario existe y la contraseña es correcta
         if(count($res)>0){
             $_SESSION['idusuario'] = $res[0]->getIdUsuario();
+           $roles = $this->getRoles();
+           //Seteo el rol por defecto del usuario
+           $this->setIdRol($roles[0]->getIdRol());
             $resp = true;
         }else{
             $this->cerrar();
@@ -45,11 +48,11 @@ class Session {
             $param['idusuario'] = $_SESSION['idusuario'];
             $resp = $obj->buscar($param);
         }
-        return $resp;
+        return $resp[0];
     }
 
     /**
-     * Devuelve un arreglo de roles del usuario actual.
+     * Devuelve un arreglo de objetos rol del usuario actual.
      */
     public function getRoles(){
         $resp = null;
@@ -61,7 +64,9 @@ class Session {
             $rolVisitante = AbmRol::obtenerRolVisitante();
             $resp = array($rolVisitante);
         }
+
         return $resp;
+
     }
 
 
@@ -102,9 +107,18 @@ class Session {
     }
 
 
+    public function getRol(){
+        if($this->validar()){
+            $obj = new ABMRol();
+            $param['idrol'] = $this->getIdRol();
+            $rol = $obj->buscar($param);
+            return $rol[0];
+        }
+    }
+
 
       /**
-     * Valida si la sesión actual tiene usuario y psw válidos. Devuelve true o false.
+     * Valida si la sesión actual tiene un usuario cargado. Devuelve true o false.
      */
     public function validar(){
         $resp = false;

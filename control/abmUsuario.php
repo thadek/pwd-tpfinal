@@ -18,13 +18,13 @@ class ABMUsuario{
                 $resp =true;
             }
         }
-        if($datos['accion']=='borrar_rol'){
-            if($this->borrar_rol($datos)){
+        if($datos['accion']=='quitar_rol'){
+            if($this->quitar_rol($datos)){
                   $resp =true;
         }
         }
-        if($datos['accion']=='nuevo_rol'){
-           if($this->alta_rol($datos)){
+        if($datos['accion']=='asignar_rol'){
+           if($this->asignar_rol($datos)){
                 $resp =true;
         }
             
@@ -35,7 +35,7 @@ class ABMUsuario{
     /**
      * Espera como parametro un arreglo asociativo donde las claves coinciden con los nombres de las variables instancias del objeto
      * @param array $param
-     * @return Tabla
+     * @return Usuario
      */
     private function cargarObjeto($param){
         $obj = null;
@@ -89,7 +89,7 @@ class ABMUsuario{
         
     }
 
-    public function borrar_rol($param){
+    public function quitar_rol($param){
         $resp = false;
         if(isset($param['idusuario']) && isset($param['idrol'])){
             $elObjtTabla = new UsuarioRol();
@@ -102,7 +102,7 @@ class ABMUsuario{
         
     }
 
-    public function alta_rol($param){
+    public function asignar_rol($param){
         $resp = false;
         if(isset($param['idusuario']) && isset($param['idrol'])){
             $elObjtTabla = new UsuarioRol();
@@ -148,6 +148,9 @@ class ABMUsuario{
         return $resp;
     }
 
+    /**
+     * Devuelve un arreglo de objetos rol del idusuario pasado por parametro. como arreglo asociativo
+     */
     public function darRoles($param){
         $where = " true ";
         if ($param<>NULL){
@@ -158,7 +161,16 @@ class ABMUsuario{
         }
         $obj = new UsuarioRol();
         $arreglo = $obj->listar($where);
-        return $arreglo;
+
+        $arreglo_obj_roles = array();
+        foreach ($arreglo as $obj) {
+            $rol = new Rol();
+            $rol->setIdRol($obj->getRol()->getIdRol());
+            $rol->buscar();
+            array_push($arreglo_obj_roles,$rol);
+        }
+
+        return $arreglo_obj_roles;
     }
 
     
@@ -185,5 +197,40 @@ class ABMUsuario{
         $arreglo = $obj->listar($where);
         return $arreglo;
     }
+
+
+
+    public function agregarNuevoUsuario($usNombre, $usPass, $usMail)
+    {
+        $salida = "";
+        $param['usnombre'] = $usNombre;  
+        if (empty($this->buscar($param))) {
+            try {
+                $usuario = new Usuario();
+                $usuario->setUsNombre($usNombre);
+                //Encripto la password       
+                $usuario->setUsPass(Hash::encriptar_md5($usPass));
+                $usuario->setUsMail($usMail);
+                
+
+                 
+                 if($usuario->insertar()){
+                    $abmUsuarioRol = new AbmUsuarioRol();
+                    $abmUsuarioRol->setearRolDefault($usuario->getIdUsuario());
+                    $salida = "Usuario registrado correctamente.";
+                 }
+                
+            } catch (PDOException $e) {
+                $salida = "Error al registrar el usuario: " . $e->getMessage();
+            }
+        } else {
+            $salida = "El usuario ya esta registrado.";
+        }
+        return $salida;
+    }
+
+
+
+
     
 }
