@@ -138,4 +138,38 @@ class abmCompra {
         return $arreglo;
     }
 
+    public function obtener_compra_borrador_de_usuario($id_usuario){
+        $obj_compra = new C_Compra();
+        $compra_borrador = null;
+ 
+        $compras_usuario = $obj_compra->buscar(array('idusuario' =>$id_usuario));
+
+		if(is_array($compras_usuario) && $compras_usuario != null){
+			foreach($compras_usuario as $compra){
+				$estado = new abmCompraestado();
+				$estado_borrador = $estado->buscar(array('idcompra' => $compra->getIdcompra(), 'idcompraestadotipo' => 0,'cefechafin' => NULL ));
+				if( $estado_borrador != null && $estado_borrador[0]->getCefechafin() == '0000-00-00 00:00:00'){
+					$compra_borrador = $obj_compra->buscar(array('idcompra' =>$compra->getIdcompra(),'idusuario' =>$id_usuario));
+				}
+			}
+		}
+
+        return $compra_borrador;
+    }
+
+    public function contarCarrito($id_usuario)
+    {
+        $totalcantidad = 0;
+        $compra_borrador = $this->obtener_compra_borrador_de_usuario($id_usuario);
+        if($compra_borrador != null){
+            $obj_compra_item = new abmCompraitem();
+            $productos = $obj_compra_item->buscar(array('idcompra' => $compra_borrador[0]->getIdcompra()));
+
+            foreach($productos as $prd){
+                $totalcantidad += $prd->getCicantidad();
+            }
+        }
+        return $totalcantidad;
+    }
+
 }
