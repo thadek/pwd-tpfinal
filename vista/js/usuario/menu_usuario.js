@@ -9,7 +9,7 @@ const cambiarCorreo = () => {
         confirmButtonText: 'Cambiar',
         showLoaderOnConfirm: true,
         preConfirm: (correo) => {
-            return fetch(`../../controlador/usuario/cambiar_correo.php?correo=${correo}`)
+            return fetch(`../accion`)
                 .then(response => {
                     if (!response.ok) {
                         throw new Error(response.statusText)

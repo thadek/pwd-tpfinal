@@ -11,10 +11,14 @@ include_once("../estructura/header.php");
 <body class=" bg-dark  ">
 
     <?php
-    $rutalogo = "./img/";
+
     include_once("../estructura/menu/menu.php");
     include_once("../estructura/Navbar.php");
     ?>
+
+
+
+  
 
     <main class="container-fluid cont container text-center text-light">
 
@@ -26,10 +30,11 @@ include_once("../estructura/header.php");
             Te damos la bienvenida al Trabajo Práctico Final.
         </h2>
         <p>
-           Desplazate por el menu superior para acceder a los ejercicios.
+            Desplazate por el menu superior para acceder a los ejercicios.
         </p>
 
     </main>
+
 
 
     <div class="contenedor">
@@ -43,5 +48,3 @@ include_once("../estructura/header.php");
 
 
 </html>
-
-

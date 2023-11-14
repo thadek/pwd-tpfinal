@@ -71,6 +71,8 @@ function renderizarMenu($menus)
 
 
     foreach ($menus as $item) {
+
+        
         if ($item->getPadre() === null) {
             $hasSubmenu = !empty(array_filter($menus, function ($i) use ($item) {
                 return $i->getPadre() != null && $i->getPadre()->getIdMenu() == $item->getIdMenu();
@@ -103,6 +105,8 @@ $botonIniciarSesion =
     <<<INICIAR_SESION
  <a class="btn btn-dark"  href={$LOGIN}>
  <i class="fa-solid fa-right-to-bracket"></i> Iniciar sesión</a>
+ <a class="btn btn-dark"  href={$REGISTRARSE}>
+ <i class="fa-solid fa-person-walking-arrow-right"></i> Registrarse </a>
 INICIAR_SESION;
 
 

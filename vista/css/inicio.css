@@ -74,3 +74,7 @@
     .dropdown-menu > li:hover > .dropdown-submenu {
     display: block;
     }
+
+    .sinborde{
+      border-radius:0!important;
+    }

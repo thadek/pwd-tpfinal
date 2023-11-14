@@ -18,9 +18,13 @@ $PRINCIPAL = "http://" . $_SERVER['HTTP_HOST'] . "/$PROYECTO/index.php";
 
 $ERROR_403 = "http://" . $_SERVER['HTTP_HOST'] . "/$PROYECTO/vista/error/403.php";
 
+$REGISTRARSE = "http://" . $_SERVER['HTTP_HOST'] . "/$PROYECTO/vista/registrarse.php";
+$rutalogo = "./img/";
+
 $_SERVER['ROOT'] = $ROOT;
 $_SERVER['ERROR_403'] = $ERROR_403;
 $_SERVER['LOGIN'] = $LOGIN;
 $_SERVER['PRINCIPAL'] = $PRINCIPAL;
+$_SERVER['REGISTRARSE'] = $REGISTRARSE;
 
 include_once($ROOT.'/utils/autorizar.php');

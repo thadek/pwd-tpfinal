@@ -16,12 +16,11 @@ class Session {
         $resp = false;
         $obj = new ABMUsuario();
         $param['usnombre'] = $usr;
-        $password = Hash::encriptar_md5($password);
-        $param['uspass'] = $password;
+        //$param['uspass'] = $password;
         $param['usdeshabilitado'] = null;
         $res = $obj->buscar($param);
-        //Si obtengo un resultado, es porque el usuario existe y la contraseña es correcta
-        if(count($res)>0){
+        
+        if(count($res)>0 && Hash::verificar_hash($password,$res[0]->getUsPass())){
             $_SESSION['idusuario'] = $res[0]->getIdUsuario();
            $roles = $this->getRoles();
            //Seteo el rol por defecto del usuario

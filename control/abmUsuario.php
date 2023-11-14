@@ -93,7 +93,12 @@ class ABMUsuario{
         $resp = false;
         if(isset($param['idusuario']) && isset($param['idrol'])){
             $elObjtTabla = new UsuarioRol();
-            $elObjtTabla->setearConClave($param['idusuario'],$param['idrol']);
+            $rol = new Rol();
+            $rol->setIdRol($param['idrol']);
+            $elObjtTabla->setRol($rol);
+            $usuario = new Usuario();
+            $usuario->setIdUsuario($param['idusuario']);
+            $elObjtTabla->setUsuario($usuario);
             $resp = $elObjtTabla->eliminar();
             
         }
@@ -200,16 +205,23 @@ class ABMUsuario{
 
 
 
+    /**
+     * Crea un usuario, le setea el rol default y devuelve un array asociativo con el mensaje
+     * @param string $usNombre
+     * @param string $usPass
+     * @param string $usMail
+     * @return array
+     */
     public function agregarNuevoUsuario($usNombre, $usPass, $usMail)
     {
-        $salida = "";
+        $salida = [];
         $param['usnombre'] = $usNombre;  
         if (empty($this->buscar($param))) {
             try {
                 $usuario = new Usuario();
                 $usuario->setUsNombre($usNombre);
                 //Encripto la password       
-                $usuario->setUsPass(Hash::encriptar_md5($usPass));
+                $usuario->setUsPass(Hash::encriptar_hash($usPass));
                 $usuario->setUsMail($usMail);
                 
 
@@ -217,14 +229,17 @@ class ABMUsuario{
                  if($usuario->insertar()){
                     $abmUsuarioRol = new AbmUsuarioRol();
                     $abmUsuarioRol->setearRolDefault($usuario->getIdUsuario());
-                    $salida = "Usuario registrado correctamente.";
+                    $salida["mensaje"] = "Usuario registrado correctamente.";
+                    
                  }
                 
             } catch (PDOException $e) {
-                $salida = "Error al registrar el usuario: " . $e->getMessage();
+                $salida["mensaje"] = "Error al registrar el usuario: " . $e->getMessage();
+                $salida["error"] = true;
             }
         } else {
-            $salida = "El usuario ya esta registrado.";
+            $salida["mensaje"] = "El usuario ya esta registrado.";
+            $salida["error"] = true;
         }
         return $salida;
     }

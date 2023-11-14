@@ -175,4 +175,17 @@ class Producto {
         return $arreglo;
     }
 
+
+
+    public function jsonSerialize()
+    {
+        return [
+            'idProducto' => $this->getIdProducto(),
+            'proNombre' => $this->getProNombre(),
+            'proDetalle' => $this->getProDetalle(),
+            'precio' => $this->getPrecio(),
+            'proCantStock' => $this->getProCantStock()
+        ];
+    }
+
 }

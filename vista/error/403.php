@@ -3,6 +3,11 @@
 include_once("../../configuracion.php");
 include_once("../../estructura/header.php");
 
-http_response_code(403);
 
-echo "<h1>403 - Acceso denegado</h1>";
+
+$response["status"] = 403;
+$response["message"] = "No tiene permisos para acceder a este recurso";
+
+http_response_code($response["status"]);
+
+echo json_encode($response);

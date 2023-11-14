@@ -3,11 +3,14 @@
     <a class="navbar-brand" href="./" style="display:flex; flex-direction:row;">
 
         <?php $img = <<<IMG
-            <img src="$rutalogo/logo.png" width="80" height="80" alt="logo grupo 8">
+                <div class="marca">
+                    <h1>BikeStore</h1>
+                    <span>by grupo 8</span>   
+                </div>
             IMG;
         echo $img;
         ?>
-        <h5 class="text-center p-4 ">BikeStore</h5>
+       
     </a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navegacion" aria-controls="navegacion" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon "></span>

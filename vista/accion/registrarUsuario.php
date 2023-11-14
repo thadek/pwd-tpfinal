@@ -9,12 +9,15 @@
                         $pass = $datos["uspass"];
 
                         $abmUsuario = new AbmUsuario();
-                        $resultado = $abmUsuario->agregarNuevoUsuario($nombreUsuario, $pass, $mail);
-
-                        $resp["resultado"] = $resultado;
-                      echo json_encode($resp);
+                        $resultado = $abmUsuario->agregarNuevoUsuario($nombreUsuario, $pass, $mail);     
+                        if(isset($resultado["error"])){
+                          http_response_code(409);
+                        }      
+                        echo json_encode($resultado);
               }else{
-                $resp["resultado"] = "Faltan datos";
+                       $resp["resultado"] = "Faltan datos para realizar el registro.";
+                       $resp["error"] = true;
+                       http_response_code(400);
                        echo json_encode($resp);
               }
             

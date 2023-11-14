@@ -29,7 +29,7 @@ class AbmProducto {
     private function cargarObjeto($param){
         $obj = null;
            
-        if( array_key_exists('id',$param) and array_key_exists('nombre',$param)){
+        if( array_key_exists('idproducto',$param) and array_key_exists('idproducto',$param)){
             $obj = new Producto();
             $obj->cargar($param['idproducto'], $param['pronombre'], $param['prodetalle'], $param['precio'], $param['procantstock']);
         }
