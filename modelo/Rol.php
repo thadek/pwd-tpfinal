@@ -63,7 +63,7 @@ public function buscar(){
 public function insertar(){
     $base = new BaseDatos();
     $resp = false;
-    $sql = "INSERT INTO rol (idRol, roDescripcion)
+    $sql = "INSERT INTO rol (idrol, rodescripcion)
             VALUES ('".$this->getIdRol()."','".$this->getRoDescripcion()."')";
     
     if ($base->Iniciar()) {

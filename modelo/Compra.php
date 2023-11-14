@@ -64,7 +64,9 @@ public function buscar(){
         if ($res > -1) {
             if ($res > 0) {
                 $row = $base->Registro();
-                $this->cargar($row['idcompra'], $row['cofecha'], $row['idusuario']);
+                $usr = new Usuario();
+                $usr->setIdUsuario($row['idusuario']);
+                $this->cargar($row['idcompra'], $row['cofecha'], $usr);
                 $resp = true;
             }
         }
@@ -80,7 +82,7 @@ public function insertar(){
     $resp = false;
     $base = new BaseDatos();
     $sql = "INSERT INTO compra(cofecha, idusuario) 
-            VALUES (" . $this->getCoFecha() . ", '" . $this->getUsuario()->getId() . "')";
+            VALUES (" . $this->getCoFecha() . ", '" . $this->getUsuario()->getIdUsuario() . "')";
     if ($base->Iniciar()) {
 
         if($idCompra= $base->Ejecutar($sql)){
@@ -98,7 +100,7 @@ public function insertar(){
 public function modificar(){
     $resp = false;
     $base = new BaseDatos();
-    $sql = "UPDATE compra SET cofecha = '" . $this->getCoFecha() . "', idusuario=".$this->getUsuario()->getId()." WHERE idcompra = " . $this->getIdCompra();
+    $sql = "UPDATE compra SET cofecha = '" . $this->getCoFecha() . "', idusuario=".$this->getUsuario()->getIdUsuario()." WHERE idcompra = " . $this->getIdCompra();
     if ($base->Iniciar()) {
         if ($base->Ejecutar($sql)) {
             $resp = true;
@@ -139,10 +141,10 @@ public static function listar($parametro = ""){
         if ($res > 0) {
             while ($row = $base->Registro()) {  
                 $obj = new Compra();
-                $user = new Usuario();
-                $user->setId($row['idusuario']);
-                $user->buscar();
-                $obj->cargar($row['idcompra'], $row['cofecha'], $user);
+                $usr = new Usuario();
+                $usr->setIdUsuario($row['idusuario']);
+                $usr->buscar();
+                $obj->cargar($row['idcompra'], $row['cofecha'], $usr);
                 array_push($arreglo, $obj);
             }
         }

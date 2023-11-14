@@ -17,6 +17,6 @@ print_r($datos);
             $mensaje = "La accion ".$datos['accion']." no pudo concretarse.";
         }
         //echo $mensaje;
-        echo("<script>location.href = './index.php?msg=$mensaje';</script>");
+        echo("<script>location.href = './verRoles.php?msg=$mensaje';</script>");
     }
 ?>

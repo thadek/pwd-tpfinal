@@ -2,8 +2,8 @@
 
 class UsuarioRol {
 
-    private $usuario;
-    private $rol;
+    private Usuario $usuario;
+    private Rol $rol;
     private $mensajeOperacion;
 
     public function __construct()
@@ -52,9 +52,9 @@ class UsuarioRol {
                 if($res>0){
                     $row = $base->Registro();
                     $usr = new Usuario();
-                    $usr->setIdUsuario($row['idUsuario']);
+                    $usr->setIdUsuario($row['idusuario']);
                     $rol = new Rol();
-                    $rol->setIdRol($row['idRol']);
+                    $rol->setIdRol($row['idrol']);
 
                     $this->cargar($usr,$rol);
                 }

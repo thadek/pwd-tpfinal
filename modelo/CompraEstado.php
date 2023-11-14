@@ -3,8 +3,8 @@
 class CompraEstado {
 
     private $idCompraEstado;
-    private $idCompra;
-    private $idCompraEstadoTipo;
+    private Compra $compra;
+    private CompraEstadoTipo $compraEstadoTipo;
     private $ceFechaIni;
     private $ceFechaFin;
     private $mensajeoperacion;
@@ -12,18 +12,18 @@ class CompraEstado {
     public function __construct(){
 
         $this->idCompraEstado = "";
-        $this->idCompra = "";
-        $this->idCompraEstadoTipo = "";
+        $this->compra = new Compra();
+        $this->compraEstadoTipo = new CompraEstadoTipo();
         $this->ceFechaIni = "";
         $this->ceFechaFin = "";
         $this->mensajeoperacion = "";
         
     }
 
-    public function cargar($idCompraEstado, $idCompra, $idCompraEstadoTipo, $ceFechaIni, $ceFechaFin){
+    public function cargar($idCompraEstado, $compra, $compraEstadoTipo, $ceFechaIni, $ceFechaFin){
         $this->setIdCompraEstado($idCompraEstado);
-        $this->setIdCompra($idCompra);
-        $this->setIdCompraEstadoTipo($idCompraEstadoTipo);
+        $this->setCompra($compra);
+        $this->setCompraEstadoTipo($compraEstadoTipo);
         $this->setCeFechaIni($ceFechaIni);
         $this->setCeFechaFin($ceFechaFin);
     }
@@ -34,12 +34,12 @@ class CompraEstado {
         $this->idCompraEstado = $idCompraEstado;
     }
 
-    public function setIdCompra($idCompra){
-        $this->idCompra = $idCompra;
+    public function setCompra($compra){
+        $this->compra = $compra;
     }
 
-    public function setIdCompraEstadoTipo($idCompraEstadoTipo){
-        $this->idCompraEstadoTipo = $idCompraEstadoTipo;
+    public function setCompraEstadoTipo($compraEstadoTipo){
+        $this->compraEstadoTipo = $compraEstadoTipo;
     }
 
     public function setCeFechaIni($ceFechaIni){
@@ -60,12 +60,12 @@ class CompraEstado {
         return $this->idCompraEstado;
     }
 
-    public function getIdCompra(){
-        return $this->idCompra;
+    public function getCompra(){
+        return $this->compra;
     }
 
-    public function getIdCompraEstadoTipo(){
-        return $this->idCompraEstadoTipo;
+    public function getCompraEstadoTipo(){
+        return $this->compraEstadoTipo;
     }
 
     public function getCeFechaIni(){
@@ -89,7 +89,11 @@ class CompraEstado {
             if($res>-1){
                 if($res>0){
                     $row = $base->Registro();
-                    $this->cargar($row['idcompraestado'], $row['idcompra'], $row['idcompraestadotipo'], $row['cefechaini'], $row['cefechafin']);
+                    $compra = new Compra();
+                    $compra->setIdCompra($row['idcompra']);
+                    $compraEstadoTipo = new CompraEstadoTipo();
+                    $compraEstadoTipo->setIdCompraEstadoTipo($row['idcompraestadotipo']);
+                    $this->cargar($row['idcompraestado'], $compra, $compraEstadoTipo, $row['cefechaini'], $row['cefechafin']);
                     
                 }
             }
@@ -105,7 +109,7 @@ class CompraEstado {
 		$base = new BaseDatos();
 		$resp = false;
 		$sql = "INSERT INTO compraestado (idcompraestado, idcompra, idcompraestadotipo, cefechaini, cefechafin)
-				VALUES ('".$this->getIdCompraEstado()."','".$this->getIdCompra()."','".$this->getIdCompraEstadoTipo()."','".$this->getCeFechaIni()."','".$this->getCeFechaFin()."')";
+				VALUES ('".$this->getIdCompraEstado()."','".$this->getCompra()->getIdCompra()."','".$this->getCompraEstadoTipo()->getIdCompraEstadoTipo()."','".$this->getCeFechaIni()."','".$this->getCeFechaFin()."')";
         
         if ($base->Iniciar()) {
     		$idUser = $base->Ejecutar($sql);
@@ -123,7 +127,7 @@ class CompraEstado {
     public function modificar(){
         $resp = false;
         $base = new BaseDatos();
-        $sql="UPDATE compraestado SET idcompra='".$this->getIdCompra()."', idcompraestadotipo='".$this->getIdCompraEstadoTipo()."', 
+        $sql="UPDATE compraestado SET idcompra='".$this->getCompra()->getIdCompra()."', idcompraestadotipo='".$this->getCompraEstadoTipo()->getIdCompraEstadoTipo()."', 
         cefechaini='".$this->getCeFechaIni()."', cefechafin='".$this->getCeFechaFin().
         "'  WHERE idcompraestado=".$this->getIdCompraEstado();
         if ($base->Iniciar()) {
@@ -167,7 +171,13 @@ class CompraEstado {
                 
                 while ($row = $base->Registro()){
                     $obj= new CompraEstado();
-                    $obj->cargar($row['idcompraestado'], $row['idcompra'], $row['idcompraestadotipo'], $row['cefechaini'], $row['cefechafin']);
+                    $compra = new Compra();
+                    $compra->setIdCompra($row['idcompra']);
+                    $compra->buscar();
+                    $compraEstadoTipo = new CompraEstadoTipo();
+                    $compraEstadoTipo->setIdCompraEstadoTipo($row['idcompraestadotipo']);
+                    $compraEstadoTipo->buscar();
+                    $obj->cargar($row['idcompraestado'], $compra, $compraEstadoTipo, $row['cefechaini'], $row['cefechafin']);
                     array_push($arreglo, $obj);
                 }
                
