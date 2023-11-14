@@ -111,7 +111,12 @@ class ABMUsuario{
         $resp = false;
         if(isset($param['idusuario']) && isset($param['idrol'])){
             $elObjtTabla = new UsuarioRol();
-            $elObjtTabla->setearConClave($param['idusuario'],$param['idrol']);
+            $rol = new Rol();
+            $rol->setIdRol($param['idrol']);
+            $elObjtTabla->setRol($rol);
+            $usuario = new Usuario();
+            $usuario->setIdUsuario($param['idusuario']);
+            $elObjtTabla->setUsuario($usuario);
             $resp = $elObjtTabla->insertar();
            
 
