@@ -153,7 +153,7 @@ class ABMMenu{
         $arr_menurol = $obj->listar("idRol = ".$idRol);
         $arr_menus = array();
         foreach ($arr_menurol as $menurol) {
-            $param['id'] = $menurol->getIdMenu();
+            $param['id'] = $menurol->getMenu()->getIdMenu();
             $param['medeshabilitado'] = 'NULL';
             $menu = $this->buscar($param);
             if($menu!=null){
