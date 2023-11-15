@@ -100,9 +100,8 @@ class Producto {
     public function insertar(){
         $respuesta = false;
         $base = new BaseDatos();
-        $sql = "INSERT INTO producto (idproducto, pronombre, prodetalle, precio, procantstock)
+        $sql = "INSERT INTO producto (pronombre, prodetalle, precio, procantstock)
         VALUES ('" 
-        . $this->getIdProducto() . "', '" 
         . $this->getProNombre() . "', '" 
         . $this->getProDetalle() . "', '" 
         . $this->getPrecio() . "', '" 

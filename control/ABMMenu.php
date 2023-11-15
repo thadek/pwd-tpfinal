@@ -167,6 +167,36 @@ class ABMMenu{
     }
 
 
+
+    /**
+     * Dado un id de rol y id de menu, inserta la tupla en la base de datos para 
+     * dar acceso a ese menu al rol correspondiente
+     */
+    public function asignarMenuRol($idRol,$idMenu){
+        $obj = new MenuRol();
+        $obj->cargar(null,$idRol,$idMenu);
+        $obj->insertar();
+        $response = [
+            'status' => 200,
+            'msg' => 'Menu asignado correctamente'
+        ];
+        return $response;      
+    }
+
+    /**
+     * Dado un id de rol y id de menu, elimina la tupla en la base de datos para 
+     * quitar el acceso a ese menu al rol correspondiente
+     */
+    public function quitarMenuRol($idRol,$idMenu){
+        $obj = new MenuRol();
+        $obj->cargar(null,$idRol,$idMenu);
+        $obj->eliminar();
+        $response = [
+            'status' => 200,
+            'msg' => 'Menu quitado correctamente'
+        ];
+        return $response;
+    }
   
 
 

@@ -108,7 +108,7 @@ class MenuRol {
     public function eliminar(){
         $resp = false;
         $base = new BaseDatos();
-        $sql="DELETE FROM menurol WHERE idmenu=".$this->getMenu()->getIdMenu();
+        $sql="DELETE FROM menurol WHERE idmenu=".$this->getMenu()->getIdMenu()." AND idrol=".$this->getRol()->getIdRol();
         if ($base->Iniciar()) {
             if ($base->Ejecutar($sql)) {
                 return true;
@@ -136,7 +136,7 @@ class MenuRol {
                     $obj= new MenuRol();
                     $menu= new Menu();
                     $menu->setIdMenu($row['idmenu']);
-                    $menu->buscar();
+                   // $menu->buscar();
                     $rol = new Rol();
                     $rol->setIdRol($row['idrol']);
                     $rol->buscar();
@@ -152,4 +152,27 @@ class MenuRol {
  
         return $arreglo;
     }
+
+
+    public function jsonSerialize()
+    {
+        if($this->getMenu() != null){
+            $menu = $this->getMenu()->jsonSerialize();
+        }else{
+            $menu = null;
+        }
+
+        if($this->getRol() != null){
+            $rol = $this->getRol()->jsonSerialize();
+        }else{
+            $rol = null;
+        }
+
+        return [
+            'menu' => $menu,
+            'rol' => $rol
+        ];
+    }
+
+
 }

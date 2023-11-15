@@ -12,9 +12,17 @@
    <link rel="stylesheet" href="./css/styles.css">
    <link rel="stylesheet" href="./css/inicio.css">
    <link rel="stylesheet" href="./css/bootstrap.min.css">
+
+   <link type="text/css" rel="stylesheet" href="./css/jsgrid.min.css" />
+   <link type="text/css" rel="stylesheet" href="./css/jsgrid-theme.min.css" />
+
    <script type="text/javascript" src="./js/bootstrap.bundle.min.js"></script>
    <script type="text/javascript" src="./js/jquery.js"></script>
    <script type="text/javascript" src="./js/sweetalert2.js"></script>
+
+ 
+    
+<script type="text/javascript" src="./js/jsgrid/jsgrid.min.js"></script>    
 
 
 

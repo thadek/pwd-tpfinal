@@ -8,6 +8,7 @@ class Menu {
     private $padre;
     private $link;
     private $meDeshabilitado;
+    private array $roles;
     private $mensajeoperacion;
 
     public function __construct(){
@@ -18,17 +19,19 @@ class Menu {
         $this->padre = "";
         $this->link = "";
         $this->meDeshabilitado = "";
+        $this->roles = array();
         $this->mensajeoperacion = "";
         
     }
 
-    public function cargar($idMenu, $meNombre, $meDescripcion, $padre, $link, $meDeshabilitado){
+    public function cargar($idMenu, $meNombre, $meDescripcion, $padre, $link, $meDeshabilitado,$roles = []){
         $this->setIdMenu($idMenu);
         $this->setMeNombre($meNombre);
         $this->setMeDescripcion($meDescripcion);
         $this->setPadre($padre);
         $this->setLink($link);
         $this->setMeDeshabilitado($meDeshabilitado);
+        $this->setRoles($roles);
     }
 
     //setters
@@ -55,6 +58,10 @@ class Menu {
 
     public function setMeDeshabilitado($meDeshabilitado){
         $this->meDeshabilitado = $meDeshabilitado;
+    }
+
+    public function setRoles($roles){
+        $this->roles = $roles;
     }
 
     public function setMensajeoperacion($mensajeoperacion){
@@ -86,6 +93,10 @@ class Menu {
     public function getMeDeshabilitado(){
         return $this->meDeshabilitado;
     }
+
+    public function getRoles(){
+        return $this->roles;
+    }
     
     public function getMensajeoperacion(){
         return $this->mensajeoperacion;
@@ -100,16 +111,17 @@ class Menu {
             if($res>-1){
                 if($res>0){
                     $row = $base->Registro();
+                    $roles = MenuRol::listar("idmenu = ".$this->getIdMenu());
                     if(isset($row['idpadre'])){
                         $padre = new Menu();
                         $padre->setIdMenu($row['idpadre']);
                         $padre->buscar();
                          // Comparo para que no se genere un bucle infinito
                         if($padre->getIdMenu() != $this->getIdMenu()){
-                            $this->cargar($row['idmenu'], $row['menombre'], $row['medescripcion'], $padre, $row['link'], $row['medeshabilitado']);
-                        } else {
-                            $this->cargar($row['idmenu'], $row['menombre'], $row['medescripcion'], null, $row['link'], $row['medeshabilitado']);
-                        }
+                            $this->cargar($row['idmenu'], $row['menombre'], $row['medescripcion'], $padre, $row['link'], $row['medeshabilitado'],$roles);
+                        } 
+                    }else{
+                        $this->cargar($row['idmenu'], $row['menombre'], $row['medescripcion'], null, $row['link'], $row['medeshabilitado'],$roles);
                     }
                     
                    
@@ -190,13 +202,16 @@ class Menu {
                 
                 while ($row = $base->Registro()){
                     $obj= new Menu();
+                    $roles = MenuRol::listar("idmenu = ".$row['idmenu']);
+
+
                     if($row['idpadre']){
                         $padre = new Menu();
                         $padre->setIdMenu($row['idpadre']);
                         $padre->buscar();
-                        $obj->cargar($row['idmenu'], $row['menombre'], $row['medescripcion'], $padre, $row['link'], $row['medeshabilitado']);
+                        $obj->cargar($row['idmenu'], $row['menombre'], $row['medescripcion'], $padre, $row['link'], $row['medeshabilitado'],$roles);
                     }else{
-                        $obj->cargar($row['idmenu'], $row['menombre'], $row['medescripcion'], null, $row['link'], $row['medeshabilitado']);
+                        $obj->cargar($row['idmenu'], $row['menombre'], $row['medescripcion'], null, $row['link'], $row['medeshabilitado'],$roles);
                     }
                     
                     array_push($arreglo, $obj);
@@ -209,6 +224,32 @@ class Menu {
         }
  
         return $arreglo;
+    }
+
+
+    public function serializeRoles(){
+        $roles = array();
+        foreach ($this->getRoles() as $rol) {
+            array_push($roles,$rol->jsonSerialize()["rol"]);
+        }
+        return $roles;
+    }
+
+
+    public function jsonSerialize(){
+        $padre = null;
+        if($this->getPadre() != null){
+            $padre = $this->getPadre()->jsonSerialize();
+        }
+        return [
+            'idMenu' => $this->getIdMenu(),
+            'meNombre' => $this->getMeNombre(),
+            'meDescripcion' => $this->getMeDescripcion(),
+            'padre' => $padre,
+            'link' => $this->getLink(),
+            'meDeshabilitado' => $this->getMeDeshabilitado(),
+            'roles' => $this->serializeRoles()
+        ];
     }
     
 }

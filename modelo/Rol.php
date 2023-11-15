@@ -132,4 +132,12 @@ public static function listar($parametro = ""){
     }
     return $arreglo;
 }
+
+public function jsonSerialize(){
+    return [
+        'idRol' => $this->getIdRol(),
+        'roDescripcion' => $this->getRoDescripcion()
+    ];
+}
+
 }
