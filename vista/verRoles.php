@@ -12,56 +12,51 @@ $listaRoles = $obj->buscar(null);
 ?>
 <body class="bg-dark">
 
-<div class="row float-left">
-    <div class="col-md-12 float-left">
-      <?php 
-      if(isset($datos) && isset($datos['msg']) && $datos['msg']!=null) {
-        echo $datos['msg'];
-      }
-     ?>
-    </div>
-</div>
-
 <div class="container mt-4">
     <h3 class="mb-4 text-light">ABM - Roles</h3>
 
-    <div class="row justify-content-end">
+    <div class="row justify-content-end mb-3">
         <div class="col-md-12">
-            <a class="btn btn-success" role="button" href="editarRol.php?accion=nuevo&idrol=-1">Nuevo</a>
+            <a class="btn btn-success btn-nuevo" role="button" id="btn-nuevo">Nuevo</a>
+            <div id="nuevo-rol-container" style="display: none;">
+                <input type="text" class="form-control" id="input-nuevo-rol" placeholder="Nuevo Rol">
+                <button class="btn btn-success btn-aplicar-nuevo" id="btn-aplicar-nuevo">Aplicar</button>
+            </div>
         </div>
     </div>
 
-    <div class="table-responsive mt-4">
-        <table class="table table-stripped table-dark">
+    <div class="table-responsive">
+        <table class="table table-stripped table-dark" id="tabla-roles">
             <thead>
-                <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Nombre</th>
-                    <th scope="col">Acciones</th>
-                </tr>
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Nombre</th>
+                <th scope="col">Acciones</th>
+            </tr>
             </thead>
             <tbody>
-                <?php if (count($listaRoles) > 0) : ?>
-                    <?php foreach ($listaRoles as $rol) : ?>
-                        <tr>
-                            <td><?= $rol->getidrol() ?></td>
-                            <td><?= $rol->getrodescripcion() ?></td>
-                            <td>
-                                <a class="btn btn-info" role="button" href="editarRol.php?accion=editar&idrol=<?= $rol->getidrol() ?>">Editar</a>
-                                <a class="btn btn-primary" role="button" href="editarRol.php?accion=borrar&idrol=<?= $rol->getidrol() ?>">Borrar</a>
-                            </td>
-                        </tr>
-                    <?php endforeach; ?>
-                <?php else : ?>
-                    <tr>
-                        <td colspan="3">No hay roles disponibles</td>
-                    </tr>
-                <?php endif; ?>
+            <?php foreach ($listaRoles as $rol) : ?>
+                <tr>
+                    <td><?= $rol->getIdRol() ?></td>
+                    <td>
+                        <span class="nombre-rol"><?= $rol->getRoDescripcion() ?></span>
+                        <input type="text" class="form-control input-nombre-rol" style="display: none;">
+                    </td>
+                    <td>
+                        <button class="btn btn-info btn-editar" data-id="<?= $rol->getIdRol() ?>">Editar</button>
+                        <button class="btn btn-danger btn-borrar" data-id="<?= $rol->getIdRol() ?>">Borrar</button>
+                        <button class="btn btn-success btn-aplicar" data-id="<?= $rol->getIdRol() ?>" style="display: none;">Aplicar</button>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
             </tbody>
         </table>
     </div>
 </div>
-<div class="contenedor">
-    </div>
+
 <?php include_once("../estructura/footer.php"); ?>
+
+<script src="js/jquery.js"></script>
+<script src="js/rol/alterar_rol.js"></script> <!-- Archivo JavaScript para manejar eventos -->
 </body>
+</html>

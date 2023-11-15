@@ -1,42 +1,57 @@
 <?php
-$Titulo = " Especie ";
-include_once("../configuracion.php");
-include_once("../estructura/header.php");
-include_once("../estructura/menu/menu.php");
-$rutalogo = "./img/";
-include_once("../estructura/Navbar.php");
-$datos = darDatosSubmitted();
 
-$objC = new ABMRol();
-$obj =NULL;
-print_r($datos);
-if (isset($datos['idrol']) && $datos['idrol'] <> -1){
-    $listaTabla = $objC->buscar($datos);
-    if (count($listaTabla)==1){
-        $obj= $listaTabla[0];
+include_once("../configuracion.php");
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['accion'])) {
+    $datos['accion'] = $_POST['accion'];
+
+    if ($datos['accion'] === 'editar') {
+        $datos['idrol'] = $_POST['idrol'];
+        $datos['rodescripcion'] = $_POST['nuevo_nombre'];
+
+        $abmRol = new ABMRol();
+        $respuesta = $abmRol->abm($datos);
+
+        if ($respuesta) {
+            echo json_encode(['success' => true, 'msg' => 'Operación exitosa']);
+            exit;
+        } else {
+            echo json_encode(['success' => false, 'msg' => 'Error al cambiar el rol']);
+            exit;
+        }
+    }
+
+    if ($datos['accion'] === 'borrar') {
+        $datos['idrol'] = $_POST['idrol'];
+        $abmRol = new ABMRol();
+        $respuesta = $abmRol->baja($datos);
+
+        if ($respuesta) {
+            echo json_encode(['success' => true, 'msg' => 'Rol borrado con éxito']);
+            exit;
+        } else {
+            echo json_encode(['success' => false, 'msg' => 'Error al borrar el rol']);
+            exit;
+        }
+    }
+
+    if ($datos['accion'] === 'nuevo') {
+        $datos['rodescripcion'] = $_POST['nuevo_nombre'];
+        $abmRol = new ABMRol();
+        $respuesta = $abmRol->alta($datos);
+
+        if ($respuesta) {
+            echo json_encode(['success' => true, 'msg' => 'Rol agregado con éxito']);
+            exit;
+        } else {
+            echo json_encode(['success' => false, 'msg' => 'Error al agregar el nuevo rol']);
+            exit;
+        }
     }
 }
 
-?>	
-<form method="post" action="accion/accionEditarRol.php">
-    <input id="idrol" name ="idrol" type="hidden" value="<?php echo ($obj !=null) ? $obj->getidrol() : "-1"?>" readonly required >
-    <input id="accion" name ="accion" value="<?php echo ($datos['accion'] !=null) ? $datos['accion'] : "nose"?>" type="hidden">
-    <div class="row mb-12">
-        <div class="col-sm-12 ">
-            <div class="form-group has-feedback">
-                <label for="nombre" class="control-label">Nombre:</label>
-                <div class="input-group">
-                    <input id="rodescripcion" name="rodescripcion" type="text" class="form-control" value="<?php echo ($obj !=null) ? $obj->getrodescripcion() : ""?>" required >
+// Si la solicitud no es POST o no tiene la acción correcta, puedes devolver una respuesta de error
+echo json_encode(['success' => false, 'msg' => 'Error en la solicitud']);
+exit;
 
-                </div>
-            </div>
-        </div>
-    </div>
-	
-	<input type="submit" class="btn btn-primary btn-block" value="<?php echo ($datos['accion'] !=null) ? $datos['accion'] : "nose"?>">
-</form>
-<a href="index.php">Volver</a>
-
-<?php
-include_once("../estructura/footer.php");
 ?>
