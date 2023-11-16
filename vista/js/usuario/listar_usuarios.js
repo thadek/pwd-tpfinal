@@ -1,7 +1,6 @@
 $(document).ready(function(){
 
     const obtenerUsuarios = async () => {
-        //const url ='../vista/verUsuario.php';
         const url = './accion/usuario/accionListarUsuarios.php';
         const respuesta = await fetch(url);
         const usuarios = await respuesta.json();
@@ -23,8 +22,8 @@ $(document).ready(function(){
                         <td>${usuario.usRol}</td>
                         <td>${usuario.usDeshabilitado}</td>
                         <td>
-                            <a class="btn btn-outline-info m-2" role="button" href="modificar.php?accion=editar&idusuario=${usuario.idusuario}">Editar</a>
-                            <a class="btn btn-outline-danger m-2" role="button" href="modificar.php?accion=borrar&idusuario=${usuario.idusuario}">Borrar</a>
+                            <a class="btn btn-outline-info m-2" role="button" href="modificar.php?accion=editar&idusuario=${usuario.idusuario}">editar</a>
+                            <a class="btn btn-outline-danger m-2" role="button" href="modificar.php?accion=borrar&idusuario=${usuario.idusuario}">borrar</a>
                         </td>
                     </tr>
             `);

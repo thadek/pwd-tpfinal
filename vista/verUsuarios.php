@@ -24,6 +24,15 @@ include_once("../estructura/header.php");
                     
                     
                 </div>
+
+                <div class="row float-right">
+
+                    <div class="col-md-12 float-right text-center">
+                        <a class="btn btn-outline-success m-3" role="button" href="registrarse.php">Nuevo</a>
+
+                    </div>
+                </div>
+
                 <div class="table-responsive">
                     <table class="table table-dark table-bordered" id="tabla">
                         <thead>
@@ -39,13 +48,7 @@ include_once("../estructura/header.php");
                     </table>
 
                 </div>
-
-
-
-
         </div>
-
-
     </main>
 
 
