@@ -1,5 +1,5 @@
 <?php
-    $titulo = "Modificar usuario";
+    
     header('Content-Type: application/json');
     require_once('../../../configuracion.php');
 

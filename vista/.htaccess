@@ -1,1 +1,2 @@
 ErrorDocument 404 /pwd/pwd-tpfinal/vista/error/404.php
+ErrorDocument 403 /pwd/pwd-tpfinal/vista/error/403.php

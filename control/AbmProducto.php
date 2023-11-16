@@ -29,7 +29,7 @@ class AbmProducto {
     private function cargarObjeto($param){
         $obj = null;
            
-        if( array_key_exists('idproducto',$param) and array_key_exists('idproducto',$param)){
+        if( array_key_exists('idproducto',$param) and array_key_exists('pronombre',$param) and array_key_exists('prodetalle',$param) and array_key_exists('precio',$param) and array_key_exists('procantstock',$param)){
             $obj = new Producto();
             $obj->cargar($param['idproducto'], $param['pronombre'], $param['prodetalle'], $param['precio'], $param['procantstock']);
         }
@@ -135,6 +135,26 @@ class AbmProducto {
         $arreglo = $obj->listar($where);
         return $arreglo;
     }
+
+
+
+     /**
+     * Verifica si la cantidad enviada es mayor o igual a la cantidad de stock del producto
+     */
+    public function verificarStock($idProducto, $cantidad){
+        $objProducto = new abmProducto();
+        $producto = $objProducto->buscar(array('idproducto' => $idProducto));
+        if(isset($producto[0]) && $producto[0]->getProCantStock() >= $cantidad){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+
+
+
+
     
 }
 ?>

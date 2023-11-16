@@ -1,6 +1,12 @@
+
+
 $(document).ready(function () {
 
     $("#status").hide();
+
+    
+
+
 
 
 
@@ -102,6 +108,23 @@ const renderizarMenus = (menus) => {
 
     divMenu.html(tabla);
 }
+
+
+
+
+
+
+
+    obtenerMenus().then(menus => {
+        renderizarMenus(menus);
+    });
+
+
+
+
+
+
+});
 
 
 

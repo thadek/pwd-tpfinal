@@ -2,7 +2,7 @@
 
 include_once("../configuracion.php");
 include_once("../estructura/header.php");
-//autorizar(["admin"]);
+autorizar(["admin"]);
 ?>
 
 
@@ -37,11 +37,11 @@ include_once("../estructura/header.php");
                     <table class="table table-dark table-bordered" id="tabla">
                         <thead>
                             <tr>
-                                <th scope="col">#</th>
+                                <th scope="col">ID</th>
                                 <th scope="col">Nombre</th>
                                 <th scope="col">Correo</th>
                                 <th scope="col">Rol</th>
-                                <th scope="col">Desabilitado</th>
+                                <th scope="col">Deshabilitado</th>
                                 <th scope="col">Acciones</th>
                             </tr>
                         </thead>    

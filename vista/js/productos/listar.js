@@ -7,6 +7,16 @@ $(document).ready(function () {
         return productos;
     }
 
+    // Crear el elemento <script>
+    const nuevoScript = document.createElement('script');
+
+    // Establecer el atributo src con la URL del script que deseas agregar
+    nuevoScript.src = 'js/carrito/agregarAlCarrito.js';
+
+    // Agregar el script al documento (en este caso, al head)
+    document.head.appendChild(nuevoScript);
+
+
     const renderizarProductos = (productos) => {
         const contenedor = $('#products');
         productos.forEach(producto => {
@@ -14,6 +24,7 @@ $(document).ready(function () {
             const cantstock = (producto.proCantStock>0) ? `<span class="badge text-bg-success sinborde">En stock</span>`: `<span class="badge text-bg-danger sinborde">Sin stock</span>`;
 
             const btnAgregar = (producto.proCantStock>0) ? `<button class="btn btn-dark" data-id="${producto.idProducto}">Agregar al carrito</button>`: `<button class="btn btn-dark" disabled >Sin stock</button>`;
+ 
 
             const $producto = $(`
 
@@ -32,7 +43,10 @@ $(document).ready(function () {
                   
                    </div>
                    ${btnAgregar}
+                   <div class="card-footer bg-navbar"> cantidad: ${producto.proCantStock} </div>
                    </div>
+
+
                     
                 </div>
             </div>

@@ -14,12 +14,43 @@ $(document).ready(function(){
             if(usuario.usDeshabilitado == null){
                 usuario.usDeshabilitado = 'Activo';
             }
+
+
+            const colorRoles = {
+                1: "text-bg-success",
+                2: "text-bg-primary",
+                3: "text-bg-info",
+                4: "text-bg-light",
+                5: "text-bg-info",
+            }
+
+            let roles = ""
+            if (usuario.roles.length == 0) {
+                roles = `
+            <span class="badge rounded-pill text-bg-danger">
+            <i class='fa-solid fa-user-lock'></i> Sin roles asignados
+            </span>
+            `
+            } else {
+                roles = usuario.roles.map(rol => {
+                    return `
+            <span class="badge rounded-pill ${colorRoles[rol.rol.idRol]}">
+            <i class='fa-solid fa-user-lock'></i> ${rol.rol.roDescripcion}
+            </span>
+            `
+                }).join(" ");
+            }
+
+
+
+
+
             const $usuario = $(`
             <tr>
                         <td>${usuario.idUsuario}</td>
                         <td>${usuario.usNombre}</td>
                         <td>${usuario.usMail}</td>
-                        <td>${usuario.usRol}</td>
+                        <td>${roles}</td>
                         <td>${usuario.usDeshabilitado}</td>
                         <td>
                             <a class="btn btn-outline-info m-2" role="button" href="modificar.php?accion=editar&idusuario=${usuario.idusuario}">editar</a>

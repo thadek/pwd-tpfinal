@@ -172,4 +172,30 @@ class abmCompra {
         return $totalcantidad;
     }
 
+
+    /**
+     * Devuelve un arreglo de compras que poseen ese estado enviado por parametro como estado actual.
+     */
+    public function obtenerComprasPorEstado($estado_code){
+        $arr_compras = Compra::listar();
+        $arr_salida = array();
+        foreach($arr_compras as $compra){
+            $arr_estados = $compra->getEstados();
+            foreach($arr_estados as $estado){
+                if($estado->getCompraEstadoTipo()->getIdCompraEstadoTipo() == $estado_code and $estado->getCeFechaFin() == null){
+                    array_push($arr_salida, $compra);
+                }
+            }
+        }
+
+       return $arr_salida;
+       
+    }
+
+
+   
+
+
 }
+
+

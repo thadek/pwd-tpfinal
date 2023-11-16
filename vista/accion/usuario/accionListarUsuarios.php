@@ -9,14 +9,31 @@
     //obtengo lista de usuarios y usuarios roles
     if($_SERVER["REQUEST_METHOD"] === "GET"){
         $abmUsuario = new ABMUsuario();
-        $abmUsuarioRol = new abmUsuarioRol();
-        $salida= array();
+        //$abmUsuarioRol = new abmUsuarioRol();
+        //$salida= array();
 
-            $usuarios = $abmUsuario->buscar(null);
-            $usuariosRol = $abmUsuarioRol->buscar(null);
-            $usuariosYRoles = [];
+        $listaUsuarios = $abmUsuario->buscar(null);
+        $listaUsuariosJSON = array();
+        
+        foreach ($listaUsuarios as $usuario) {
+            array_push($listaUsuariosJSON, $usuario->jsonSerialize());
+        }
 
-            foreach ($usuarios as $objUsuario) {
+        echo json_encode($listaUsuariosJSON);
+        die();
+
+
+    }else{
+        $response["status"] = 501;
+        $response["message"] = "Metodo no implementado";
+        http_response_code($response["status"]);
+        echo json_encode($response);
+    }
+            //$usuarios = $abmUsuario->buscar(null);
+            //$usuariosRol = $abmUsuarioRol->buscar(null);
+            //$usuariosYRoles = [];
+
+            /*foreach ($usuarios as $objUsuario) {
                 $idUsuario = $objUsuario->getIdUsuario();
                 $usNombre = $objUsuario->getUsNombre();
                 $usMail = $objUsuario->getUsMail();
@@ -36,12 +53,4 @@
                     'usDeshabilitado' => $usDeshabilitado
                 ];
                 array_push($usuariosYRoles, $usuarioConRol);
-            }
-            echo json_encode($usuariosYRoles);
-            die();
-    }else{
-        $response["status"] = 501;
-        $response["message"] = "Metodo no implementado";
-        http_response_code($response["status"]);
-        echo json_encode($response);
-    }
+            }*/

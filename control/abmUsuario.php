@@ -250,7 +250,41 @@ class ABMUsuario{
     }
 
 
+    /**
+     * Modifica la contraseña del usuario en la sesion actual
+     */
+    public function modificarPassword($usPass){
+        $session = new Session();
+        $usuario = $session->getUsuario();
+        $salida = [];
+       if($session->validar()){
+            $usuario->setUsPass(Hash::encriptar_hash($usPass));
+            $usuario->modificar();
+            $salida["mensaje"] = "Contraseña modificada correctamente.";
+            $salida["error"] = false;
+       }else{
+          $salida["mensaje"] = "Error al modificar la contraseña.";
+          $salida["error"] = true;
+        }
+        return $salida;
+    }
 
+
+    public function modificarEmail($email){
+        $session = new Session();
+        $usuario = $session->getUsuario();
+        $salida = [];
+       if($session->validar()){
+            $usuario->setUsMail($email);
+            $usuario->modificar();
+            $salida["mensaje"] = "Email modificado correctamente.";
+            $salida["error"] = false;
+       }else{
+          $salida["mensaje"] = "Error al modificar el email.";
+          $salida["error"] = true;
+        }
+        return $salida;
+    }
 
     
 }
