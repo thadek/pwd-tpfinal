@@ -17,11 +17,11 @@ autorizar(['cliente', 'deposito']);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link type="text/css" rel="stylesheet" href="css/styles.css">
 </head>
-<body>
-    <h3>Carrito</h3>
+<body class="bg-dark">
+    <h3 class="text-white text-center my-3">Carrito</h3>
 
     <div class="table-responsive">
-        <table class="table table-striped table-sm">
+        <table class="table table-striped table-sm table-dark table-bordered">
             <thead>
                 <tr>
                     <th scope="col">#</th>
@@ -89,6 +89,14 @@ autorizar(['cliente', 'deposito']);
         // Mostrar el carrito al cargar la página
         mostrarCarrito();
     </script>
+
+<div class="contenedor">
+    
+</div>
+
+<div class="fixed-bottom">
+    <?php include_once("../estructura/footer.php"); ?>
+</div>
 
 </body>
 </html>
