@@ -32,9 +32,11 @@ class ABMMenu{
     private function cargarObjeto($param){
         $obj = null;
            
-        if( array_key_exists('id',$param) and array_key_exists('nombre',$param) and array_key_exists('descripcion',$param) and array_key_exists('idpadre',$param) and array_key_exists('link',$param) and array_key_exists('deshabilitado',$param)){
+        if( array_key_exists('idmenu',$param) and array_key_exists('menombre',$param) and array_key_exists('medescripcion',$param) and array_key_exists('idpadre',$param) and array_key_exists('link',$param) and array_key_exists('medeshabilitado',$param)){
             $obj = new Menu();
-            $obj->cargar($param['id'], $param['nombre'], $param['descripcion'], $param['idpadre'],$param['link'], $param['deshabilitado']);
+            $menuPadre = new Menu();
+            $menuPadre->setIdMenu($param['idpadre']);
+            $obj->cargar($param['idmenu'], $param['menombre'], $param['medescripcion'], $menuPadre, $param['link'], $param['medeshabilitado']);
         }
         return $obj;
     }
@@ -47,9 +49,9 @@ class ABMMenu{
     private function cargarObjetoConClave($param){
         $obj = null;
         
-        if( isset($param['id']) ){
+        if( isset($param['idmenu']) ){
             $obj = new Menu();
-            $obj->setIdMenu($param['id']);
+            $obj->setIdMenu($param['idmenu']);
         }
         return $obj;
     }
@@ -63,7 +65,7 @@ class ABMMenu{
     
     private function seteadosCamposClaves($param){
         $resp = false;
-        if (isset($param['id'])){
+        if (isset($param['idmenu'])){
             $resp = true;
         }
         return $resp;
@@ -75,7 +77,7 @@ class ABMMenu{
      */
     public function alta($param){
         $resp = false;
-        $param['id'] =null;
+        $param['idmenu'] =null;
         $elObjtTabla = $this->cargarObjeto($param);
 //        verEstructura($elObjtTabla);
         if ($elObjtTabla!=null and $elObjtTabla->insertar()){
@@ -112,6 +114,9 @@ class ABMMenu{
         if ($this->seteadosCamposClaves($param)){
             $elObjtTabla = $this->cargarObjeto($param);
             if($elObjtTabla!=null and $elObjtTabla->modificar()){
+                if ($elObjtTabla->getPadre() != NULL && $elObjtTabla->getPadre()->getIdMenu() == -1){
+                    $elObjtTabla->setearPadreNulo();
+                }
                 $resp = true;
             }
         }
@@ -126,13 +131,16 @@ class ABMMenu{
     public function buscar($param){
         $where = " true ";
         if ($param<>NULL){
-            if  (isset($param['id']))
-                $where.=" and idmenu =".$param['id'];
+            if  (isset($param['idmenu']))
+                $where.=" and idmenu =".$param['idmenu'];
+            if  (isset($param['menombre']))
+                $where.=" and menombre =".$param['menombre'];
+            if  (isset($param['medescripcion']))
+                $where.=" and medescripcion =".$param['medescripcion'];
             if  (isset($param['idpadre']))
                  $where.=" and idpadre ='".$param['nombre']."'";
-            if(isset($param['medeshabilitado']))
+            if  (isset($param['medeshabilitado']))
                 $where.=" and medeshabilitado IS NULL";
-            
         }
 
         $obj = new Menu();
@@ -150,7 +158,7 @@ class ABMMenu{
     public function obtenerMenuPorRol($idRol){
 
         $obj = new MenuRol();
-        $arr_menurol = $obj->listar("idRol = ".$idRol);
+        $arr_menurol = $obj->listar("idrol = ".$idRol);
         $arr_menus = array();
         foreach ($arr_menurol as $menurol) {
             $param['id'] = $menurol->getMenu()->getIdMenu();

@@ -159,8 +159,8 @@ class Menu {
         $resp = false;
         $base = new BaseDatos();
         $sql="UPDATE menu SET menombre='".$this->getMeNombre()."', medescripcion='".$this->getMeDescripcion()."', 
-        idpadre='".$this->getPadre()->getIdMenu()."', link='".$this->getLink()."', medeshabilitado='".$this->getMeDeshabilitado().
-        "'  WHERE idmenu=".$this->getIdMenu();
+            idpadre='".$this->getPadre()->getIdMenu()."', link='".$this->getLink()."', medeshabilitado='".$this->getMeDeshabilitado().
+            "'  WHERE idmenu=".$this->getIdMenu();
         if ($base->Iniciar()) {
             if ($base->Ejecutar($sql)) {
                 $resp = true;
@@ -250,6 +250,22 @@ class Menu {
             'meDeshabilitado' => $this->getMeDeshabilitado(),
             'roles' => $this->serializeRoles()
         ];
+    }
+
+    public function setearPadreNulo(){
+        $resp = false;
+        $base = new BaseDatos();
+        $sql = "UPDATE `menu` SET `idpadre` = NULL WHERE `menu`.`idmenu` = ".$this->getIdMenu().";";
+        if ($base->Iniciar()) {
+            if ($base->Ejecutar($sql)) {
+                $resp = true;
+            } else {
+                $this->setMensajeOperacion("Menu->setearPadreNulo: ".$base->getError());
+            }
+        } else {
+            $this->setMensajeOperacion("Menu->setearPadreNulo: ".$base->getError());
+        }
+        return $resp;
     }
     
 }
