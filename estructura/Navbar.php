@@ -1,6 +1,6 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-navbar p-3 ">
 
-    <a class="navbar-brand" href="./" style="display:flex; flex-direction:row;">
+    <a class="navbar-brand" href=<?php echo $PRINCIPAL;?> style="display:flex; flex-direction:row;">
 
         <?php $img = <<<IMG
                 <div class="marca">

@@ -152,4 +152,12 @@ class CompraEstadoTipo {
         return $arreglo;
     }
 
+
+    public function jsonSerialize(){
+        return [
+            'idCompraEstadoTipo' => $this->getIdCompraEstadoTipo(),
+            'cetDescripcion' => $this->getCetDescripcion()   
+        ];
+    }
+
 }

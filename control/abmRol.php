@@ -79,8 +79,8 @@ class ABMRol{
         $resp = false;
         $param['idrol'] =null;
         $elObjtTabla = $this->cargarObjeto($param);
-        if ($elObjtTabla!=null and $elObjtTabla->insertar()){
-            $resp = true;
+        if ($elObjtTabla!=null ){
+            $resp = $elObjtTabla->insertar();
         }
         return $resp;
         

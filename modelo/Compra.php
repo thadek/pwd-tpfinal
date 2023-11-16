@@ -6,18 +6,24 @@ private $idcompra;
 private $cofecha;
 private Usuario $usuario;
 private $mensajeOperacion;
+private array $items;
+private array $estados;
 
 
 public function __construct(){
    $this->idcompra = "";
    $this->cofecha = "";
    $this->usuario = new Usuario();
+   $this->items = array();
+    $this->estados = array();
 }
 
-public function cargar($idcompra, $cofecha, $usuario){
+public function cargar($idcompra, $cofecha, $usuario, $items=[], $estados = []){
    $this->setIdCompra($idcompra);
    $this->setCoFecha($cofecha);
    $this->setUsuario($usuario);  
+   $this->setItems($items);
+    $this->setEstados($estados);
 }
 
 public function getIdCompra(){
@@ -52,6 +58,22 @@ public function setMensajeOperacion($mensajeOperacion){
    $this->mensajeOperacion = $mensajeOperacion;
 }
 
+public function getItems(){
+   return $this->items;
+}
+
+public function setItems($items){
+   $this->items = $items;
+}
+
+public function getEstados(){
+   return $this->estados;
+}
+
+public function setEstados($estados){
+   $this->estados = $estados;
+}
+
 
 
 
@@ -66,7 +88,10 @@ public function buscar(){
                 $row = $base->Registro();
                 $usr = new Usuario();
                 $usr->setIdUsuario($row['idusuario']);
-                $this->cargar($row['idcompra'], $row['cofecha'], $usr);
+                $usr->buscar();
+                $items =  CompraItem::listar("idcompra = ".$this->getIdCompra());
+                $estados = CompraEstado::listar("idcompra = ".$this->getIdCompra());
+                $this->cargar($row['idcompra'], $row['cofecha'], $usr, $items, $estados);
                 $resp = true;
             }
         }
@@ -144,7 +169,9 @@ public static function listar($parametro = ""){
                 $usr = new Usuario();
                 $usr->setIdUsuario($row['idusuario']);
                 $usr->buscar();
-                $obj->cargar($row['idcompra'], $row['cofecha'], $usr);
+                $items = CompraItem::listar("idcompra = ".$row['idcompra']);
+                $estados = CompraEstado::listar("idcompra = ".$row['idcompra']);
+                $obj->cargar($row['idcompra'], $row['cofecha'], $usr, $items, $estados);
                 array_push($arreglo, $obj);
             }
         }
@@ -153,4 +180,44 @@ public static function listar($parametro = ""){
     }
     return $arreglo;
 }
+
+
+public function serializeItems(){
+    $items = array();
+    if($this->getItems() != null){
+        foreach($this->getItems() as $item){
+            array_push($items, $item->jsonSerialize());
+        }
+    }
+    return $items;
+}
+
+public function serializeEstados(){
+    $estados = array();
+    if($this->getEstados() != null){
+        foreach($this->getEstados() as $estado){
+            array_push($estados, $estado->jsonSerialize());
+        }
+    }
+    return $estados;
+}
+
+
+public function jsonSerialize(){
+    $usr = null;
+    if($this->getUsuario()!=null){
+        $usr = $this->getUsuario()->jsonSerialize();
+    }
+
+    return [
+        'idcompra' => $this->getIdCompra(),
+        'cofecha' => $this->getCoFecha(),
+        'usuario' => $usr,
+        'items' => $this->serializeItems(),
+        'estados' => $this->serializeEstados()
+    ];
+}
+
+
+
 }

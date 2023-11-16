@@ -1,13 +1,21 @@
+
+
 $(document).ready(function () {
 
     $("#status").hide();
+
+    
+
+
 
     const renderizarMenus = (menus) => {
 
         const divMenu = $("#gestionmenu");
 
-        let tabla = `<table class="table table-dark">
-    <thhead>
+     
+
+        let tabla = `<table class="table table-dark ">
+    <thead>
     <tr>
     <th>ID Menu</th>
     <th>Nombre</th>
@@ -20,23 +28,33 @@ $(document).ready(function () {
     <th></th>
     
     </tr>
-    </thhead>
+    </thead>
     `
-
-
-
-
         menus.forEach(menu => {
 
-            if (menu.padre == null) {
-                menu.padre = "Sin padre"
-            } else {
+
+            let botonBorrar = ``;
+            
+            
+    
+
+             
+            if (menu.padre != null) {
+               
+                botonBorrar += `<button class="btn btn-danger" type="button" disabled> Tiene padre</button>`
+                
                 menu.padre = `${menu.padre.idMenu} - ${menu.padre.meNombre}`
+            } else {
+                botonBorrar = `<button class="btn btn-danger" onclick="eliminarMenu(${menu.idMenu})">Eliminar</button>`
+                menu.padre = "Sin padre"
+               
             }
 
             if (menu.meDeshabilitado == null) {
                 menu.meDeshabilitado = "Habilitado"
             }
+
+           
 
             const colorRoles = {
                 1: "text-bg-success",
@@ -73,11 +91,10 @@ $(document).ready(function () {
         <td>${menu.meDeshabilitado}</td>
         <td>${roles}</td>
         <td><button class="btn btn-light" onclick="modificarMenu(${menu.idMenu})">Modificar</button></td>
-        <td><button class="btn btn-danger" onclick="eliminarMenu(${menu.idMenu})">Eliminar</button></td>
+        <td>${botonBorrar}</td>
+        
         </tr>`
         })
-
-
 
         tabla += `</table>`
 
@@ -92,6 +109,8 @@ $(document).ready(function () {
 
     obtenerMenus().then(menus => {
         renderizarMenus(menus);
+    }).catch(error=>{
+        $("#gestionmenu").html("Error al cargar los menus");
     });
 
 
@@ -100,6 +119,7 @@ $(document).ready(function () {
 
 
 });
+
 
 
 

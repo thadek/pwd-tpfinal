@@ -11,7 +11,7 @@ $(document).ready(function () {
         // Realizar la solicitud Ajax para agregar el nuevo rol
         $.ajax({
             type: "POST",
-            url: "editarRol.php", // Ajusta la URL según tu estructura de archivos
+            url: "./accion/rol/editarRol.php", // Ajusta la URL según tu estructura de archivos
             data: { accion: "nuevo", nuevo_nombre: nuevoRol },
             dataType: "json",
             success: function (response) {
@@ -21,16 +21,26 @@ $(document).ready(function () {
                     var newRow = $("<tr>");
                     newRow.append("<td>" + response.idRol + "</td>");
                     newRow.append("<td><span class='nombre-rol'>" + nuevoRol + "</span><input type='text' class='form-control input-nombre-rol' style='display: none;'></td>");
-                    newRow.append("<td><button class='btn btn-info btn-editar' data-id='" + response.idRol + "'>Editar</button><button class='btn btn-danger btn-borrar' data-id='" + response.idRol + "'>Borrar</button><button class='btn btn-success btn-aplicar' data-id='" + response.idRol + "' style='display: none;'>Aplicar</button></td>");
+                    newRow.append(`<td><button class="btn btn-info btn-editar" data-id="${response.idRol}">Editar</button><button class="btn btn-danger btn-borrar" data-id=${response.idRol}">Borrar</button><button class="btn btn-success btn-aplicar" data-id="${response.idRol}" style="display: none;">Aplicar</button></td>`);
 
                     $("#tabla-roles tbody").append(newRow);
-                    alert("Rol agregado con éxito a la lista y la base de datos");
+                   Swal.fire({
+                          title:"Rol agregado con éxito",
+                            icon:"success"
+                   })
+
                 } else {
-                    alert("Error al agregar el nuevo rol");
+                    Swal.fire({
+                        title:"Error al agregar rol",
+                        icon:"error"
+                    })
                 }
             },
             error: function () {
-                alert("Error de conexión al servidor.");
+                Swal.fire({
+                    title:"Error de conexión al servidor",
+                    icon:"error"
+                })
             },
         });
 
@@ -70,14 +80,19 @@ $(document).ready(function () {
         // Enviar datos al servidor para la actualización con AJAX
         $.ajax({
             type: "POST",
-            url: "editarRol.php", // Ajusta la URL según tu estructura de archivos
+            url: "./accion/rol/editarRol.php", // Ajusta la URL según tu estructura de archivos
             data: { accion: "editar", idrol: idRol, nuevo_nombre: nuevoNombre },
             dataType: "json",
             success: function (response) {
                 // Manejar la respuesta del servidor (puede mostrar un mensaje, etc.)
                 if (response.success) {
-                    alert("Cambio realizado con éxito");
 
+                    //alert("Cambio realizado con éxito");
+
+                    Swal.fire({
+                        title:"Cambio realizado con éxito",
+                        icon:"success"
+                    })
                     // Ocultar el campo de entrada y mostrar el nombre
                     nombreRolElement.text(nuevoNombre);
                     nombreRolElement.show();
@@ -88,7 +103,12 @@ $(document).ready(function () {
                     btnAplicarElement.hide();
 
                 } else {
-                    alert("Error al cambiar el rol");
+
+                    Swal.fire({
+                        title:"Error al cambiar rol",
+                        icon:"error"
+                    })
+                    
 
                     nombreRolElement.show();
                     inputNombreRolElement.hide();
@@ -103,8 +123,10 @@ $(document).ready(function () {
                 console.log("Status:", status);
                 console.log("Error:", error);
         
-                // Muestra un mensaje de alerta genérico
-                alert("Error de conexión al servidor.");
+                Swal.fire({
+                    title:"Error de conexión al servidor",
+                    icon:"error"
+                })
         
                 // Intenta parsear la respuesta como JSON e imprímela en la consola
                 try {
@@ -121,33 +143,57 @@ $(document).ready(function () {
         var idRol = $(this).data("id");
     
         // Confirmar si realmente quieres borrar el rol
-        var confirmacion = confirm("¿Estás seguro de que deseas borrar este rol?");
+        Swal.fire({
+            title: "¿Estás seguro de que quieres borrar este rol?",
+            text: "Esta acción no se puede deshacer.",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Sí, borrar rol",
+            cancelButtonText: "Cancelar",
+            
+        }).then((confirmacion) => {
+
+            if(confirmacion.isConfirmed){
+
+                var self = this;
     
-        if (confirmacion) {
-            // Almacenar el contexto actual
-            var self = this;
+             // Realizar la solicitud Ajax para borrar el rol
+             $.ajax({
+                 type: "POST",
+                 url: "./accion/rol/editarRol.php",
+                 data: { accion: "borrar", idrol: idRol },
+                 dataType: "json",
+                 success: function (response) {
+                     // Manejar la respuesta del servidor
+                     if (response.success) {
+                         // Borrar visualmente el rol de la lista
+                         $(self).closest("tr").remove();
+                         Swal.fire({
+                             title:"Rol borrado con éxito",
+                             icon:"success"
+                         })
+                     } else {
+                         Swal.fire({
+                             title:"Error al borrar rol",
+                             icon:"error"
+                         })
+                     }
+                 },
+                 error: function () {
+                     Swal.fire({
+                         title:"Error de conexión al servidor",
+                         icon:"error"
+                     })
+                 },
+             });
+
+            }
+             // Almacenar el contexto actual
+             
+
+        })
     
-            // Realizar la solicitud Ajax para borrar el rol
-            $.ajax({
-                type: "POST",
-                url: "editarRol.php",
-                data: { accion: "borrar", idrol: idRol },
-                dataType: "json",
-                success: function (response) {
-                    // Manejar la respuesta del servidor
-                    if (response.success) {
-                        // Borrar visualmente el rol de la lista
-                        $(self).closest("tr").remove();
-                        alert("Rol borrado con éxito de la lista y la base de datos");
-                    } else {
-                        alert("Error al borrar el rol");
-                    }
-                },
-                error: function () {
-                    alert("Error de conexión al servidor.");
-                },
-            });
-        }
+      
     });
     
 });

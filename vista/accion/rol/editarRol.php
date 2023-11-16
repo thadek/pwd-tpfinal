@@ -1,6 +1,10 @@
 <?php
 
-include_once("../configuracion.php");
+require_once '../../../configuracion.php';
+
+header('Content-Type: application/json');
+
+
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['accion'])) {
     $datos['accion'] = $_POST['accion'];
@@ -40,8 +44,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['accion'])) {
         $abmRol = new ABMRol();
         $respuesta = $abmRol->alta($datos);
 
-        if ($respuesta) {
-            echo json_encode(['success' => true, 'msg' => 'Rol agregado con éxito']);
+        if (isset($respuesta['status'])) {
+            echo json_encode(['success' => true, 'msg' => 'Rol agregado con éxito', 'idRol'=>$respuesta['idRol']]);
             exit;
         } else {
             echo json_encode(['success' => false, 'msg' => 'Error al agregar el nuevo rol']);

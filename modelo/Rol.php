@@ -63,14 +63,14 @@ public function buscar(){
 public function insertar(){
     $base = new BaseDatos();
     $resp = false;
-    $sql = "INSERT INTO rol (idrol, rodescripcion)
-            VALUES ('".$this->getIdRol()."','".$this->getRoDescripcion()."')";
+    $sql = "INSERT INTO rol (rodescripcion)
+            VALUES ('".$this->getRoDescripcion()."')";
     
     if ($base->Iniciar()) {
-        $idUser = $base->Ejecutar($sql);
-        if($idUser>-1){
-            $this->setIdRol($idUser);
-            $resp = true;
+        $idRol = $base->Ejecutar($sql);
+        if($idRol>-1){
+            $this->setIdRol($idRol);
+            $resp = ["idRol" => $idRol,"status"=>true];
         }
     
     } else {
