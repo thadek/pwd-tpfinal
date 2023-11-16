@@ -19,7 +19,7 @@ $(document).ready(function(){
                         <td>${usuario.idUsuario}</td>
                         <td>${usuario.usNombre}</td>
                         <td>${usuario.usMail}</td>
-                        <td>${usuario.usRol}</td>
+                        <td>${usuario.roles}</td>
                         <td>${usuario.usDeshabilitado}</td>
                         <td>
                             <a class="btn btn-outline-info m-2" role="button" href="modificar.php?accion=editar&idusuario=${usuario.idusuario}">editar</a>

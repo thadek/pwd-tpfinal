@@ -151,4 +151,25 @@ class UsuarioRol {
  
         return $arreglo;
     }
+
+    public function jsonSerialize()
+    {
+        /*if($this->getUsuario() != null){
+            $usuario = $this->getUsuario()->jsonSerialize();
+        }else{
+            $usuario = null;
+        }*/
+
+        if($this->getRol() != null){
+            $rol = $this->getRol()->jsonSerialize();
+        }else{
+            $rol = null;
+        }
+
+        return [
+            //'usuario' => $usuario,
+            'rol' => $rol
+        ];
+    }
+
 }
