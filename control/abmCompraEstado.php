@@ -144,4 +144,84 @@ class AbmCompraEstado {
         $arreglo =  $obj->listar($where);   
         return $arreglo;
     }
+
+
+    public function buscarUltimoEstadoCompra($idCompra){
+        //Obtengo el arreglo de estados de compra
+        $arreglo = $this->buscar("idcompra = ".$idCompra);
+        //Obtengo el ultimo estado de compra verificando que la fecha de fin sea null
+        $ultimoEstado = null;
+        foreach($arreglo as $estado){
+            if($estado->getCefechafin() == null){
+                $ultimoEstado = $estado;
+            }
+        }
+        return $ultimoEstado;   
+    }
+
+    /**
+     * Cambia el estado de una compra siempre que el estado que se quiera cambiar sea mayor al ultimo estado de la compra
+     * @param int $idCompra
+     * @param int $idEstado
+     */
+    public function cambiarEstadoDeCompra($idCompra,$idEstado){
+
+        date_default_timezone_set('America/Argentina/Buenos_Aires');
+
+        $resp = ["status"=>false,"msg"=>"No se pudo cambiar el estado de la compra"];
+        //Busco el ultimo estado de la compra
+        $ultimoEstado = $this->buscarUltimoEstadoCompra($idCompra);
+        //Si el ultimo estado es distinto al que quiero cambiar y que sea mayor que el anterior (no puedo volver para atras una compra cancelada.)
+        $id_estado_anterior = $ultimoEstado->getCompraEstadoTipo()->getIdCompraEstadoTipo();
+        
+        if(($ultimoEstado != null) && ($id_estado_anterior != $idEstado) && ($idEstado > $id_estado_anterior)){
+            //Seteo la fecha de fin del ultimo estado
+            $ultimoEstado->setCefechafin(date("Y-m-d H:i:s"));
+            //Modifico el ultimo estado
+            $ultimoEstado->modificar();
+            //Creo un nuevo estado
+            $nuevoEstado = new CompraEstado();
+
+            $compra = new Compra();
+            $compra->setIdCompra($idCompra);
+
+            $estado = new CompraEstadoTipo();
+            $estado->setIdCompraEstadoTipo($idEstado);
+
+
+            $nuevoEstado->cargar(null,$compra,$estado,date("Y-m-d H:i:s"),null);
+            //Inserto el nuevo estado
+            $nuevoEstado->insertar();
+            $resp = ["status"=>true,"msg"=>"Se cambio el estado de la compra"];       
+        }
+        return $resp;
+    }
+   
+    public function confirmarCompra($idCompra){
+        $resp = ["status"=>false,"msg"=>"No se pudo confirmar la compra, no hay stock suficiente"];
+        $compra = new Compra();
+        $compra->setIdCompra($idCompra);
+        $compra->buscar();
+        $items = $compra->getItems();
+        $itemsConfirmados = true;
+        foreach($items as $item){
+            if($item->getProducto()->getProcantstock() < $item->getCicantidad()){
+                $itemsConfirmados = false;
+            }
+        }
+        if($itemsConfirmados){
+            //Si hay stock suficiente confirmo la compra y resto el stock
+            foreach($items as $item){
+                $item->getProducto()->setProcantstock($item->getProducto()->getProcantstock() - $item->getCicantidad());
+                $item->getProducto()->modificar();
+            }
+            $this->cambiarEstadoDeCompra($idCompra,2);
+            $resp = ["status"=>true,"msg"=>"Se confirmo la compra"];
+        }
+        return $resp;
+    }
+
+
+
+
 }

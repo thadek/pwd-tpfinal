@@ -12,7 +12,7 @@ $listaRoles = $obj->buscar(null);
 ?>
 <body class="bg-dark">
 
-<div class="container mt-4">
+<div class="container mt-4 cont">
     <h3 class="mb-4 text-light">ABM - Roles</h3>
 
     <div class="row justify-content-end mb-3">
@@ -25,8 +25,8 @@ $listaRoles = $obj->buscar(null);
         </div>
     </div>
 
-    <div class="table-responsive">
-        <table class="table table-stripped table-dark" id="tabla-roles">
+   
+        <table class="table  table-dark" id="tabla-roles">
             <thead>
             <tr>
                 <th scope="col">ID</th>
@@ -51,7 +51,7 @@ $listaRoles = $obj->buscar(null);
             <?php endforeach; ?>
             </tbody>
         </table>
-    </div>
+    
 </div>
 
 <?php include_once("../estructura/footer.php"); ?>

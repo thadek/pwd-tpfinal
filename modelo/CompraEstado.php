@@ -107,9 +107,9 @@ class CompraEstado {
 
     public function insertar(){
 		$base = new BaseDatos();
-		$resp = false;
-		$sql = "INSERT INTO compraestado (idcompraestado, idcompra, idcompraestadotipo, cefechaini, cefechafin)
-				VALUES ('".$this->getIdCompraEstado()."','".$this->getCompra()->getIdCompra()."','".$this->getCompraEstadoTipo()->getIdCompraEstadoTipo()."','".$this->getCeFechaIni()."','".$this->getCeFechaFin()."')";
+		$resp = false;  
+		$sql = "INSERT INTO compraestado ( idcompra, idcompraestadotipo, cefechaini)
+				VALUES ('".$this->getCompra()->getIdCompra()."','".$this->getCompraEstadoTipo()->getIdCompraEstadoTipo()."', '".$this->getCeFechaIni()."')";
         
         if ($base->Iniciar()) {
     		$idUser = $base->Ejecutar($sql);
@@ -173,7 +173,7 @@ class CompraEstado {
                     $obj= new CompraEstado();
                     $compra = new Compra();
                     $compra->setIdCompra($row['idcompra']);
-                    $compra->buscar();
+                    //$compra->buscar();
                     $compraEstadoTipo = new CompraEstadoTipo();
                     $compraEstadoTipo->setIdCompraEstadoTipo($row['idcompraestadotipo']);
                     $compraEstadoTipo->buscar();
@@ -190,4 +190,22 @@ class CompraEstado {
         return $arreglo;
     }
     
+
+    public function jsonSerialize(){
+
+        $compraEstadoTipo = null;
+        if($this->getCompraEstadoTipo() != null){
+            $compraEstadoTipo = $this->getCompraEstadoTipo()->jsonSerialize();
+        } 
+
+        return [
+            'idCompraEstado' => $this->getIdCompraEstado(),
+            'compraEstadoTipo' => $compraEstadoTipo,
+            'ceFechaIni' => $this->getCeFechaIni(),
+            'ceFechaFin' => $this->getCeFechaFin()
+        ];
+    }
+
+
+
 }

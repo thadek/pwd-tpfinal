@@ -29,6 +29,7 @@ function autorizar($roles)
             $interseccion = array_intersect($arr_roles, $roles);
             //Si la intersección es vacía, el usuario no tiene ninguno de los roles que se pasaron como parámetro
             if (empty($interseccion)) {
+                
                 header("Location:" . $_SERVER['ERROR_403']);
                 die();
             }

@@ -41,7 +41,7 @@ include_once("../estructura/header.php");
                                 <th scope="col">Nombre</th>
                                 <th scope="col">Correo</th>
                                 <th scope="col">Rol</th>
-                                <th scope="col">Desabilitado</th>
+                                <th scope="col">Deshabilitado</th>
                                 <th scope="col">Acciones</th>
                             </tr>
                         </thead>    

@@ -162,7 +162,7 @@ class CompraItem {
                     $producto->buscar();
                     $compra = new Compra();
                     $compra->setIdCompra($row['idcompra']);
-                    $compra->buscar();
+                    //$compra->buscar();
                     $obj->cargar($row['idcompraitem'], $producto, $compra, $row['cicantidad']);
                     array_push($arreglo, $obj);
                 }
@@ -172,5 +172,20 @@ class CompraItem {
         }
         return $arreglo;
     }
+
+
+    public function jsonSerialize(){
+
+        $producto = null;
+        if($this->getProducto() != null){
+        $producto = $this->getProducto()->jsonSerialize();
+        }
+        return [
+            'idCompraItem' => $this->getIdCompraItem(),
+            'producto' => $producto,
+            'ciCantidad' => $this->getCiCantidad()
+        ];
+    }
+
 
 }

@@ -143,7 +143,8 @@ public function insertar(){
 public function modificar(){
     $resp = false;
     $base = new BaseDatos();
-    $sql = "UPDATE usuario SET usnombre = '" . $this->getUsNombre() . "', uspass = '" . $this->getUsPass() . "', usmail = '" . $this->getUsMail() . "', usdeshabilitado = '" . $this->getUsDeshabilitado() . "' WHERE idusuario = " . $this->getIdUsuario();
+    $usDeshabilitado = $this->getUsDeshabilitado() != null ? "'" . $this->getUsDeshabilitado() . "'" : "NULL";
+    $sql = "UPDATE usuario SET usnombre = '" . $this->getUsNombre() . "', uspass = '" . $this->getUsPass() . "', usmail = '" . $this->getUsMail() . "', usdeshabilitado = " . $usDeshabilitado . " WHERE idusuario = " . $this->getIdUsuario();
     if ($base->Iniciar()) {
         if ($base->Ejecutar($sql)) {
             $resp = true;
@@ -174,6 +175,15 @@ public function eliminar(){
 }
 
 
+public function jsonSerialize(){
+    //Serializo lo que necesito solamente.
+    return [
+        'idUsuario' => $this->getIdUsuario(),
+        'usNombre' => $this->getUsNombre(),
+        'usMail' => $this->getUsMail(),
+        'usDeshabilitado' => $this->getUsDeshabilitado()
+    ];
+}
 
 
 
