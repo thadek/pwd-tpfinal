@@ -86,7 +86,7 @@ autorizar(["cliente", "deposito"]);
                     <div class="col d-flex align-items-center justify-content-center gap-3">
                         <button class="btn btn-light" onclick="cambiarCorreo()"> Cambiar correo electrónico</button>
                         <button class="btn btn-light" onclick="cambiarPassword()"> Cambiar contraseña</button>
-                        <button class="btn btn-light"> Cambiar rol de visualizacion</button>
+                        <?php if(count($roles_usr)>1) echo '<button class="btn btn-light" onclick="cambiarRolVisualizacion()"> Cambiar rol de visualizacion</button>' ?>
                     </div>
                 </div>
             </div>

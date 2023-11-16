@@ -69,6 +69,16 @@ class Session {
     }
 
 
+    public function getRolesJSON(){
+       
+        $roles = $this->getRoles();
+        $rolesJSON = array_map(function($rol){
+            return $rol->jsonSerialize();
+        },$roles);
+        return $rolesJSON;
+    }
+
+
     /**
      * Si el usuario posee multiples roles, esta funcion recibe el id rol
      * seleccionado para visualizar el sitio
@@ -133,5 +143,17 @@ class Session {
     }
 
 
+
+    public function cambiarRolVisualizar($idRol){
+        $salida = [];  
+        if($this->validar() && $this->setIdRol($idRol)){
+                $salida["mensaje"] = "Rol de visualizacion modificado.";
+                $salida["error"] = false;    
+       }else{
+          $salida["mensaje"] = "Error al modificar el rol.";
+          $salida["error"] = true;
+        }
+        return $salida;
+    }
 
 }

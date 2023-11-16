@@ -270,5 +270,21 @@ class ABMUsuario{
     }
 
 
+    public function modificarEmail($email){
+        $session = new Session();
+        $usuario = $session->getUsuario();
+        $salida = [];
+       if($session->validar()){
+            $usuario->setUsMail($email);
+            $usuario->modificar();
+            $salida["mensaje"] = "Email modificado correctamente.";
+            $salida["error"] = false;
+       }else{
+          $salida["mensaje"] = "Error al modificar el email.";
+          $salida["error"] = true;
+        }
+        return $salida;
+    }
+
     
 }

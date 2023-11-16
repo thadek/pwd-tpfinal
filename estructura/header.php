@@ -22,9 +22,9 @@
 
  
     
-<script type="text/javascript" src="{$RUTAVISTA}/js/jsgrid/jsgrid.min.js"></script>    
-
-
+    <script type="text/javascript" src="{$RUTAVISTA}/js/jsgrid/jsgrid.min.js"></script>    
+    <script type="text/javascript" src="{$RUTAVISTA}/js/jquery.validate.js"></script>    
+    <script src="https://unpkg.com/validator@latest/validator.min.js"></script>
 
     <title>$page_title</title>
 
