@@ -189,9 +189,7 @@ class Usuario {
     public function serializeRoles(){
         $roles = array();
         foreach ($this->getRoles() as $rol) {
-            //$nombreRol = $rol->getIdRol()->getRoDescripcion();
-    
-            array_push($roles, $rol->jsonSerialize()["rol"]["roDescripcion"]);
+            array_push($roles, $rol->jsonSerialize());
         }
         return $roles;
     }
