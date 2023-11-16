@@ -7,6 +7,7 @@ private $usNombre;
 private $usPass;
 private $usMail;
 private $usDeshabilitado;
+private array $roles = [];
 private $mensajeOperacion;
 
 public function __construct(){
@@ -14,16 +15,18 @@ public function __construct(){
     $this->usNombre = "";
     $this->usPass = "";
     $this->usMail = "";
+    $this->roles = array();
     $this->usDeshabilitado = "";
 }
 
 
-public function cargar($idUsuario, $usNombre, $usPass, $usMail, $usDeshabilitado){
+public function cargar($idUsuario, $usNombre, $usPass, $usMail, $usDeshabilitado, $roles = []){
     $this->setIdUsuario($idUsuario);
     $this->setUsNombre($usNombre);
     $this->setUsPass($usPass);
     $this->setUsMail($usMail);
     $this->setUsDeshabilitado($usDeshabilitado);
+    $this->setRoles($roles);
 
 }
 
@@ -75,6 +78,14 @@ public function setMensajeOperacion($mensajeOperacion){
     $this->mensajeOperacion = $mensajeOperacion;
 }
 
+public function getRoles(){
+    return $this->roles;
+}
+
+public function setRoles($roles){
+    $this->roles = $roles;
+}
+
 public function buscar(){
     $resp = false;
     $base = new BaseDatos();
@@ -110,7 +121,8 @@ public static function listar($condicion = ""){
         if ($res > 0) {
             while ($row = $base->Registro()) {
                 $obj = new Usuario();
-                $obj->cargar($row['idusuario'], $row['usnombre'], $row['uspass'], $row['usmail'], $row['usdeshabilitado']);
+                $roles = UsuarioRol::listar("idusuario = ".$row['idusuario']);
+                $obj->cargar($row['idusuario'], $row['usnombre'], $row['uspass'], $row['usmail'], $row['usdeshabilitado'], $roles);
                 array_push($arregloUsuarios, $obj);
             }
         }
@@ -185,9 +197,37 @@ public function jsonSerialize(){
     ];
 }
 
+/*foreach ($usuarios as $objUsuario) {
+    $idUsuario = $objUsuario->getIdUsuario();
+    $usNombre = $objUsuario->getUsNombre();
+    $usMail = $objUsuario->getUsMail();
+    $usDeshabilitado = $objUsuario->getUsDeshabilitado();
+    $idRol = null;
+    foreach ($usuariosRol as $objRol){
+        if($objRol->getUsuario()->getIdUsuario() == $idUsuario){
+            $idRol = $objRol->getRol()->getrodescripcion();
+            break;
+        }
+    }
+    $usuarioConRol = [
+        'idUsuario' => $idUsuario,
+        'usNombre' => $usNombre,
+        'usMail' => $usMail,
+        'usRol' => $idRol,
+        'usDeshabilitado' => $usDeshabilitado
+    ];
+    array_push($usuariosYRoles, $usuarioConRol);
+}
+*/
 
 
-
+    public function serializeRoles(){
+        $roles = array();
+        foreach ($this->getRoles() as $rol) {
+            array_push($roles, $rol->jsonSerialize()["rol"]);
+        }
+        return $roles;
+    }
 
 
 
