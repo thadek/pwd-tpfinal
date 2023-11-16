@@ -154,11 +154,11 @@ class UsuarioRol {
 
     public function jsonSerialize()
     {
-        /*if($this->getUsuario() != null){
+        if($this->getUsuario() != null){
             $usuario = $this->getUsuario()->jsonSerialize();
         }else{
             $usuario = null;
-        }*/
+        }
 
         if($this->getRol() != null){
             $rol = $this->getRol()->jsonSerialize();
@@ -166,9 +166,10 @@ class UsuarioRol {
             $rol = null;
         }
 
+
         return [
-            //'usuario' => $usuario,
-            'rol' => $rol
+            'usuario' => $usuario,
+            'rol' => $rol,
         ];
     }
 
