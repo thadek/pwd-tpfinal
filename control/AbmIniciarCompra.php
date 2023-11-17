@@ -87,5 +87,119 @@ class ABMIniciarCompra{
         
         $abmCompraItem->abm($param4);
         
+      
+    }
+
+    public function traerCarrito(){
+        //funcion que trae los datos de carrito de la base de datos.
+        $objSession = new Session();
+        $usuario = $objSession->getUsuario();
+        $idusuario = $usuario->getIdUsuario();
+
+        $abmCompra = new AbmCompra();
+        $abmCompraItem = new AbmCompraItem();
+        $abmCompraEstado = new AbmCompraEstado();
+
+        $arreglo = [];
+        $arreglo["idusuario"] = $idusuario;
+
+        $compras = $abmCompra->buscar($arreglo);
+    
+
+        //ahora se recuperan todos los idcompra de las compras.
+        $idcompras = [];
+        foreach($compras as $compra){
+            array_push($idcompras, $compra->getIdCompra());
+        }
+        
+        //ahora se verifican los estados de los idcompra, y se guaran en un array todos los idcompra que tengan idcompraestadotipo = 0.
+        $idcomprasEnCarrito = [];
+        foreach($idcompras as $idcompra){
+            $arreglo2 = [];
+            $arreglo2["idcompra"] = $idcompra;
+            $compraestados = $abmCompraEstado->buscar($arreglo2);
+            foreach($compraestados as $compraestado){
+                if($compraestado->getCompraEstadoTipo()->getIdCompraEstadoTipo() == 0){
+                    array_push($idcomprasEnCarrito, $compraestado->getCompra()->getIdCompra());
+                }
+            }
+        }
+        //print_r($idcomprasEnCarrito);
+
+        //ahora se recuperan todos los idcompraitem de las compras.
+        $idcompraitems = [];
+        foreach($idcomprasEnCarrito as $idcompra){
+            $arreglo3 = [];
+            $arreglo3["idcompra"] = $idcompra;
+            $compraitems = $abmCompraItem->buscar($arreglo3);
+            foreach($compraitems as $compraitem){
+                array_push($idcompraitems, $compraitem->getIdCompraItem());
+            }
+        }
+        //print_r($idcompraitems);
+
+        //Se recupera la cantidad de cada $idcomprasitem.
+        $cantidad = [];
+        foreach($idcompraitems as $idcompraitem){
+            $arreglo4 = [];
+            $arreglo4["idcompraitem"] = $idcompraitem;
+            $compraitems = $abmCompraItem->buscar($arreglo4);
+            foreach($compraitems as $compraitem){
+                array_push($cantidad, $compraitem->getCiCantidad());
+            }
+        }
+        //print_r($cantidad);
+
+        //ahora se recuperan todos los productos de los idcompraitem.
+        $productos = [];
+        foreach($idcompraitems as $idcompraitem){
+            $arreglo4 = [];
+            $arreglo4["idcompraitem"] = $idcompraitem;
+            $compraitems = $abmCompraItem->buscar($arreglo4);
+            foreach($compraitems as $compraitem){
+                array_push($productos, $compraitem->getProducto());
+            }
+        }
+        //print_r($productos);
+
+
+        //Ahora hay que mostrar los productos en el carrito, una variable que tenga html y muestre en una tabla los productos con su id compra item, nombre, precio, cantidad, subtotal, y un boton para eliminar el producto del carrito.
+        $html = "";
+        $html .= "<table class='table table-striped table-hover table-dark table-bordered'>";
+        $html .= "<thead class='thead-dark'>";
+        $html .= "<tr>";
+        $html .= "<th scope='col'>#</th>";
+        $html .= "<th scope='col'>Nombre</th>";
+        $html .= "<th scope='col'>Precio</th>";
+        $html .= "<th scope='col'>Cantidad</th>";
+        $html .= "<th scope='col'>Subtotal</th>";
+        $html .= "<th scope='col'>Eliminar</th>";
+        $html .= "</tr>";
+        $html .= "</thead>";
+        $html .= "<tbody>";
+        $contador = 1;
+        $total = 0;
+        $n = 0;
+
+        foreach($productos as $producto){
+            $html .= "<tr>";
+            $html .= "<th scope='row'>".$contador."</th>";
+            $html .= "<td>".$producto->getProNombre()."</td>";
+            $html .= "<td>$".$producto->getPrecio()."</td>";
+            $html .= "<td>$cantidad[$n]</td>";
+            $html .= "<td>$".($producto->getPrecio() * $cantidad[$n])."</td>";
+            $html .= "<td><button type='button' class='btn btn-outline-danger' onclick='eliminarCompra(" . $idcompraitems[$n] . ")'>Eliminar</button></td>";
+            $html .= "</tr>";
+            $contador++;
+            $total += $producto->getPrecio() * $cantidad[$n];
+            $n++;
+        }
+        $html .= "</tbody>";
+        $html .= "</table>";
+        $html .= "<h3 class='mt-3 text-white'>Total: $".$total."</h3>";
+
+        return $html;
+
+
     }
 }

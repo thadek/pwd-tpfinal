@@ -21,82 +21,65 @@ autorizar(['cliente', 'deposito']);
     <h3 class="text-white text-center my-3">Carrito</h3>
 
     <div class="table-responsive">
-        <table class="table table-striped table-sm table-dark table-bordered">
-            <thead>
-                <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Producto</th>
-                    <th scope="col">Cantidad</th>
-                    <th scope="col">Precio</th>
-                </tr>
-            </thead>
-            <tbody id="tablaCarrito">
-                <!-- La tabla se llenará dinámicamente con JavaScript -->
-            </tbody>
-        </table>
+        
+    <?php
+    $html = new ABMIniciarCompra();
+    $html = $html->traerCarrito();
+    echo $html;
+    ?>
+
     </div>
 
-    <div class="row float-right">
+    <table>
+        <tr>
+            <td>
+                <button class="btn btn-success" onclick="vaciarCarrito()">Vaciar carrito</button>
+            </td>
+            <td>
+                <button class="btn btn-success" onclick="iniciarCompra()">Iniciar compra</button>
+            </td>
+        </tr>
+    </table>
+   <!-- <div class="row float-right">
         <div class="col-md-12 float-right">
             <button class="btn btn-success" onclick="vaciarCarrito()">Vaciar carrito</button>
         </div>
     </div>
 
-    <div class="row float-">
+    <div class="row">
         <div class="col-md-12 float-right">
             <button class="btn btn-success" onclick="iniciarCompra()">Iniciar compra</button>
         </div>
     </div>
-
+-->
     <script>
-        // Obtener el carrito almacenado en localStorage
-        var carrito = JSON.parse(localStorage.getItem('carrito')) || [];
-
-        // Función para mostrar el carrito en la tabla
-        function mostrarCarrito() {
-            var tablaCarrito = document.getElementById('tablaCarrito');
-            tablaCarrito.innerHTML = ''; // Limpiar la tabla
-
-            carrito.forEach(function(producto, index) {
-                var fila = '<tr>' +
-                    '<th scope="row">' + (index + 1) + '</th>' +
-                    '<td>' + producto.nombre + '</td>' +
-                    '<td>' + producto.cantidad + '</td>' +
-                    '<td>' + producto.precio + '</td>' +
-                    '</tr>';
-
-                tablaCarrito.innerHTML += fila;
-            });
-        }
 
         // Función para vaciar el carrito
         function vaciarCarrito() {
-            localStorage.removeItem('carrito');
-            carrito = [];
-            mostrarCarrito();
-            console.log("Carrito vaciado");
+            vaciarCarrito();
+            console.log("Vaciar carrito");
         }
 
         // Función para iniciar la compra (puedes redirigir a otra página aquí)
         function iniciarCompra() {
             // Aquí puedes agregar lógica para enviar los datos a tu backend y realizar acciones adicionales
             // Luego, puedes redirigir al usuario a otra página, por ejemplo, "iniciar_compra.php"
-            
-            
+            iniciarCompra();
             console.log("Iniciar compra");
         }
 
-        // Mostrar el carrito al cargar la página
-        mostrarCarrito();
     </script>
 
 <div class="contenedor">
     
-</div>
 
+</div>
 <div class="fixed-bottom">
     <?php include_once("../estructura/footer.php"); ?>
 </div>
 
 </body>
+<script src="js/carrito/vaciarCarrito.js"></script>
+<script src="js/carrito/iniciarCompra.js"></script>
+<script src="js/carrito/eliminarCompra.js"></script>
 </html>

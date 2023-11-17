@@ -9,6 +9,9 @@ $abmIniciarCompra = new ABMIniciarCompra();
 
 $abmIniciarCompra->abm($producto);
 
+//$abmIniciarCompra->traerCarrito();
+
+
 /* $objSession = new Session();
     $usuario = $objSession->getUsuario();
     $idusuario = $usuario->getIdUsuario();
