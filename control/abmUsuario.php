@@ -285,6 +285,20 @@ class ABMUsuario{
         }
         return $salida;
     }
+    public function cargarComprasUser(){
+        $session = new Session();
+        $salida = [];
+        $compra = new abmCompra();
 
-    
+       if($session->validar()){
+            $usuario = $session->getUsuario();
+            $arr['idusuario'] =  $usuario->getIdUsuario();
+            $salida =  $compra->buscar($arr);
+           
+       }else{
+          $salida["mensaje"] = "Error al modificar el email.";
+          $salida["error"] = true;
+        }
+        return $salida;
+    }
 }
