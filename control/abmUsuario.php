@@ -286,5 +286,44 @@ class ABMUsuario{
         return $salida;
     }
 
-    
+
+    public function cargarComprasUser(){
+        $session = new Session();
+        $salida = [];
+        $compra = new abmCompra();
+
+       if($session->validar()){
+            $usuario = $session->getUsuario();
+            $arr['idusuario'] =  $usuario->getIdUsuario();
+            $salida =  $compra->buscar($arr);
+
+       }else{
+          $salida["mensaje"] = "Error al modificar el email.";
+          $salida["error"] = true;
+        }
+        return $salida;
+    }
+
+    /**Devuelve un arreglo de compras que tienen estadotipo 0 y tienen fecha fin null de ese estado, (encarrito) */
+    public function cargarCarritoUser(){
+     
+        $comprasUsr = $this->cargarComprasUser();
+        $estado_en_carrito = [];
+        foreach($comprasUsr as $compra){
+            $estados = $compra->getEstados();
+          foreach($estados as $estado){
+                if(($estado->getCompraEstadoTipo()->getIdCompraEstadoTipo() == 0) and ($estado->getCeFechaFin() == null)){
+                    array_push($estado_en_carrito,$compra);
+                }
+          }
+
+        }
+        return $estado_en_carrito;
+    }
+
+
 }
+
+
+
+    

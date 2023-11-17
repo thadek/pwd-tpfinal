@@ -3,7 +3,7 @@
 require_once('../../../configuracion.php');
 header('Content-Type: application/json');
 $datos = darDatosSubmitted();
-autorizar(['admin']);
+//autorizar(['admin']);
 
 $abmMenu = new AbmMenu();
 

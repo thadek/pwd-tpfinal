@@ -64,102 +64,20 @@ class ABMTablaCarrito {
         $usuario = $session->getUsuario();
         $idusuario = $usuario->getIdUsuario();
 
-        $abmCompra = new AbmCompra();
-        $abmCompraItem = new AbmCompraItem();
-        $abmCompraEstado = new AbmCompraEstado();
+        $abmUsuario = new AbmUsuario();
 
         $arreglo = [];
         $arreglo["idusuario"] = $idusuario;
 
-        $compras = $abmCompra->buscar($arreglo);
+        //El usuario solo debe tener 1 carrito, por lo que el arreglo solo va a tener 1 elemento.
+        $carrito = $abmUsuario->cargarCarritoUser();
     
+        $estado = $carrito[0]->getEstados()[0];    
 
-        //ahora se recuperan todos los idcompra de las compras.
-        $idcompras = [];
-        foreach($compras as $compra){
-            array_push($idcompras, $compra->getIdCompra());
-        }
-        
-        //ahora se verifican los estados de los idcompra, y se guaran en un array todos los idcompra que tengan idcompraestadotipo = 0.
-        $idcomprasEnCarrito = [];
-        foreach($idcompras as $idcompra){
-            $arreglo2 = [];
-            $arreglo2["idcompra"] = $idcompra;
-            $compraestados = $abmCompraEstado->buscar($arreglo2);
-            foreach($compraestados as $compraestado){
-                if($compraestado->getCompraEstadoTipo()->getIdCompraEstadoTipo() == 0){
-                    array_push($idcomprasEnCarrito, $compraestado->getCompra()->getIdCompra());
-                }
-            }
-        }
-        //print_r($idcomprasEnCarrito);
 
-        //ahora se recuperan todos los idcompraitem de las compras.
-        $idcompraitems = [];
-        foreach($idcomprasEnCarrito as $idcompra){
-            $arreglo3 = [];
-            $arreglo3["idcompra"] = $idcompra;
-            $compraitems = $abmCompraItem->buscar($arreglo3);
-            foreach($compraitems as $compraitem){
-                array_push($idcompraitems, $compraitem->getIdCompraItem());
-            }
-        }
-        //print_r($idcompraitems);
-
-        //Se recupera la cantidad de cada $idcomprasitem.
-        $cantidad = [];
-        foreach($idcompraitems as $idcompraitem){
-            $arreglo4 = [];
-            $arreglo4["idcompraitem"] = $idcompraitem;
-            $compraitems = $abmCompraItem->buscar($arreglo4);
-            foreach($compraitems as $compraitem){
-                array_push($cantidad, $compraitem->getCiCantidad());
-            }
-        }
-        //print_r($cantidad);
-
-        //ahora se recuperan todos los productos de los idcompraitem.
-        $productos = [];
-        foreach($idcompraitems as $idcompraitem){
-            $arreglo4 = [];
-            $arreglo4["idcompraitem"] = $idcompraitem;
-            $compraitems = $abmCompraItem->buscar($arreglo4);
-            foreach($compraitems as $compraitem){
-                array_push($productos, $compraitem->getProducto());
-            }
-        }
-
-        //ahora hay que eliminar todas las filas que coincidan con la compra del usuario.
-        //empezamos con la tabla compra item.
-        foreach($idcompraitems as $idcompraitem){
-            $arreglo4 = [];
-            $arreglo4["idcompraitem"] = $idcompraitem;
-            $compraitems = $abmCompraItem->buscar($arreglo4);
-            foreach($compraitems as $compraitem){
-                $compraitem->eliminar();
-            }
-        }
-
-        //seguimos con la tabla comprae estado.
-        foreach($idcomprasEnCarrito as $idcompra){
-            $arreglo2 = [];
-            $arreglo2["idcompra"] = $idcompra;
-            $compraestados = $abmCompraEstado->buscar($arreglo2);
-            foreach($compraestados as $compraestado){
-                $compraestado->eliminar();
-            }
-        }
-
-        //terminamos con la tabla compra.
-        foreach($idcomprasEnCarrito as $idcompra){
-            $arreglo = [];
-            $arreglo["idcompra"] = $idcompra;
-            $compras = $abmCompra->buscar($arreglo);
-            foreach($compras as $compra){
-                $compra->eliminar();
-            }
-        }
-
+        $estado->setCeFechaFin(date("Y-m-d H:i:s"));
+        $estado->modificar();
+    
     }
 
     public function iniciarCompra(){
@@ -178,41 +96,10 @@ class ABMTablaCarrito {
 
         $compras = $abmCompra->buscar($arreglo);
 
-        //ahora se recuperan todos los idcompra de las compras.
-        $idcompras = [];
-        foreach($compras as $compra){
-            array_push($idcompras, $compra->getIdCompra());
-        }
+        $ultimaCompra = end($compras);
 
-        //ahora se verifican los estados de los idcompra, y se guaran en un array todos los idcompra que tengan idcompraestadotipo = 0.
-        $idcomprasEnCarrito = [];
-        foreach($idcompras as $idcompra){
-            $arreglo2 = [];
-            $arreglo2["idcompra"] = $idcompra;
-            $compraestados = $abmCompraEstado->buscar($arreglo2);
-            foreach($compraestados as $compraestado){
-                if($compraestado->getCompraEstadoTipo()->getIdCompraEstadoTipo() == 0){
-                    array_push($idcomprasEnCarrito, $compraestado->getCompra()->getIdCompra());
-                }
-            }
-        }
+        $abmCompraEstado->cambiarEstadoDeCompra($ultimaCompra->getIdCompra(),1);
 
-        //print_r($idcomprasEnCarrito);
-
-
-        //se crea un obj estadotipo para pasarlo por param a la modificacion de la compra.
-        $objEstadoTipo = new CompraEstadoTipo();
-        $objEstadoTipo->cargar(1, "Iniciada", "Compra iniciada");
-
-        //ahora se cambia el estado de las compras del usuario a 1, que significa que estan confirmadas.
-        foreach($idcomprasEnCarrito as $idcompra){
-            $arreglo3 = [];
-            $arreglo3["idcompra"] = $idcompra;
-            $compraestados = $abmCompraEstado->buscar($arreglo3);
-            foreach($compraestados as $compraestado){
-                $compraestado->setCompraEstadoTipo($objEstadoTipo);
-                $compraestado->modificar();
-            }
-        }
+       
     }
 }

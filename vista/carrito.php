@@ -18,7 +18,8 @@ autorizar(['cliente', 'deposito']);
     <link type="text/css" rel="stylesheet" href="css/styles.css">
 </head>
 <body class="bg-dark">
-    <h3 class="text-white text-center my-3">Carrito</h3>
+    <div class="container tablas">
+    <h2 class="text-white text-center my-3"> <i class="fa-solid fa-cart-shopping"></i> Carrito</h2>
 
     <div class="table-responsive">
         
@@ -30,16 +31,19 @@ autorizar(['cliente', 'deposito']);
 
     </div>
 
-    <table>
-        <tr>
-            <td>
-                <button class="btn btn-success" onclick="vaciarCarrito()">Vaciar carrito</button>
-            </td>
-            <td>
-                <button class="btn btn-success" onclick="iniciarCompra()">Iniciar compra</button>
-            </td>
-        </tr>
-    </table>
+    
+    <div class="row">
+        <div class="col-md-3 d-flex flex-direction-row gap-2"><button class="btn btn-outline-success" onclick="iniciarCompra()">Enviar compra</button>
+        <button class="btn btn-outline-danger" onclick="vaciarCarrito()">Vaciar carrito</button></div>
+    </div>
+        
+               
+            
+
+            
+        
+    
+    </div>
    <!-- <div class="row float-right">
         <div class="col-md-12 float-right">
             <button class="btn btn-success" onclick="vaciarCarrito()">Vaciar carrito</button>
@@ -56,7 +60,7 @@ autorizar(['cliente', 'deposito']);
 
         // Función para vaciar el carrito
         function vaciarCarrito() {
-            vaciarCarrito();
+            vacioElCarrito();
             console.log("Vaciar carrito");
         }
 
@@ -64,7 +68,7 @@ autorizar(['cliente', 'deposito']);
         function iniciarCompra() {
             // Aquí puedes agregar lógica para enviar los datos a tu backend y realizar acciones adicionales
             // Luego, puedes redirigir al usuario a otra página, por ejemplo, "iniciar_compra.php"
-            iniciarCompra();
+            inicioLaCompra();
             console.log("Iniciar compra");
         }
 

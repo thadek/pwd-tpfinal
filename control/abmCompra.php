@@ -34,7 +34,7 @@ class abmCompra {
            
         if( array_key_exists('idcompra',$param)){
             $obj = new Compra();
-            $obj->cargar($param['idcompra'],$param['cofecha'],$param['idusuario']);
+            $obj->cargar($param['idcompra'],$param['cofecha'],$param['usuario']);
         }
         return $obj;
     }
@@ -138,6 +138,8 @@ class abmCompra {
         return $arreglo;
     }
 
+
+
     public function obtener_compra_borrador_de_usuario($idUsuario){
         $objCompra = new abmCompra();
         $compraBorrador = null;
@@ -190,6 +192,53 @@ class abmCompra {
 
        return $arr_salida;
        
+    }
+
+    /**
+     * Devuelve un string del ultimo estado de la compra
+     */
+    public function obtenerUltimoEstadoCompra($compra){
+        $arr_estados = $compra->getEstados();
+        $ultimo_estado = end($arr_estados);
+        return $ultimo_estado;
+    }
+
+
+
+    public function obtenerTotalCompra($compra){
+        $total = 0;
+        $items = $compra->getItems();
+        foreach($items as $item){
+            $total += $item->getProducto()->getPrecio()*$item->getCiCantidad();
+        }
+        return $total;
+    }
+
+    public function obtenerCantItemsCompra($compra){
+        $items = $compra->getItems();
+        $cantItems  = 0;
+        foreach($items as $item){
+            $cantItems += $item->getCiCantidad();
+        }
+        return $cantItems;
+    }
+
+    public function obtenerComprasJSON($idusuario){
+        $arr_compras = Compra::listar("idusuario = ".$idusuario->getIdUsuario() );
+        $salida = [];
+       
+       foreach($arr_compras as $compra){
+        $estado = $this->obtenerUltimoEstadoCompra($compra);
+        if($estado->getCompraEstadoTipo()->getIdCompraEstadoTipo() != 0){
+            $total = $this->obtenerTotalCompra($compra);
+         
+            $cantItems = $this->obtenerCantItemsCompra($compra);
+            $comp = ["idcompra" => $compra->getIdCompra(), "cofecha" => $compra->getCoFecha(), "cantitems"=> $cantItems, "total" => $total, "estado"=>$estado->getCompraEstadoTipo()->getCetDescripcion(), "acciones"=>renderBotonesAccionesCompra($compra->getIdCompra())];
+                array_push($salida, $comp);
+        }
+          
+       }    
+        return $salida;
     }
 
 

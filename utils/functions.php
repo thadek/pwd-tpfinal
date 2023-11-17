@@ -49,3 +49,11 @@ function renderBotonesAcciones($id){
     ';
     return $html;
 }
+
+
+function renderBotonesAccionesCompra($id){
+    $html = '
+    <a class="btn btn-outline-info m-2" href="./detalleCompra.php?id='.$id.'"> Ver detalle compra</a>
+    ';
+    return $html;
+}

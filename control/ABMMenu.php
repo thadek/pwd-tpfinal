@@ -208,5 +208,15 @@ class ABMMenu{
   
 
 
+    public function obtenerMenuRolJSON(){
+        $menusRol = MenuRol::listar();
+        $menuJSON = array();
+        foreach ($menusRol as $menuRol) {
+            $menuRol->getMenu()->buscar();
+            array_push($menuJSON,$menuRol->jsonSerialize());
+        }
+        return $menuJSON;
+    }
+
 }
 ?>

@@ -89,6 +89,14 @@ const cambiarPassword = async () => {
             try {
                 const password = $("#password_change").val();
 
+                if(password.length < 4){
+                    Swal.fire(
+                        'Ocurrió un error.',
+                        `La contraseña debe tener al menos 4 caracteres`,
+                        'error'
+                    )
+                    return;
+                }
 
 
                 let datosForm = new URLSearchParams();

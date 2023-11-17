@@ -181,4 +181,15 @@ class ABMRol{
         return $salida;
     }
 
+
+
+    function obtenerRolesJSON(){
+        $roles = $this->buscar(null);
+        $rolesJSON = array();
+        foreach ($roles as $rol) {
+            array_push($rolesJSON,$rol->jsonSerialize());
+        }
+        return $rolesJSON;
+    }
+
 }

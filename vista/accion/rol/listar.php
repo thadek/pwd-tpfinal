@@ -5,10 +5,11 @@ header('Content-Type: application/json');
 
 $datos = darDatosSubmitted();
 
-if($_SERVER["REQUEST_METHOD"] === "GET"){
-    $abmRol = new ABMRol();
+$abmRol = new AbmRol();
+
+$roles = $abmRol->obtenerRolesJSON();
+
+handleResponse($roles);
 
 
 
-
-?>

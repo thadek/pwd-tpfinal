@@ -28,7 +28,7 @@ const obtenerDetalleCompraDep = async () => {
     const valores = window.location.search;
     const urlParams = new URLSearchParams(valores);
     if (!urlParams.has('id')) {
-        window.location.href = "http://localhost/pwd/pwd-tpfinal/vista/"
+        //window.location.href = "http://localhost/pwd/pwd-tpfinal/vista/"
         return;
     }
     const url = `http://localhost/pwd/pwd-tpfinal/vista/accion/compra/listar.php?id=${urlParams.get('id')}`;

@@ -1,5 +1,5 @@
 
-function iniciarCompra() {
+function inicioLaCompra() {
     $.ajax({
         type: "POST",
         url: "accion/carrito/iniciarCompra.php", // Reemplaza con la URL correcta de tu backend
@@ -8,7 +8,7 @@ function iniciarCompra() {
             Swal.fire({
                 title: response.mensaje,
                 icon: "success",
-                text: "El carrito se inicio correctamente",
+                text: "La compra se envió correctamente.",
                 timer: 2000,
                 timerProgressBar: true,
             });
@@ -17,7 +17,7 @@ function iniciarCompra() {
             }, 2000);
         },
         error: function(error) {
-            console.error("Error al vaciar carrito:", error);
+            console.error("Error al enviar compra:", error);
         }
     })
 }
