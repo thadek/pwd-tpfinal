@@ -10,8 +10,7 @@ autorizar(["deposito"]);
 
 $abmProducto = new AbmProducto();
 
-
-if($_SERVER["REQUEST_METHOD"] === "DELETE"){
+    verificarMetodoHttp("POST");
     // Obtener el contenido de la petición
     $json_data = file_get_contents("php://input");
     
@@ -20,27 +19,13 @@ if($_SERVER["REQUEST_METHOD"] === "DELETE"){
 
     // Verificar si la decodificación fue exitosa
     if ($datos_arr === null && json_last_error() !== JSON_ERROR_NONE) {
-        http_response_code(400); // Bad Request
-        echo json_encode(["error" => "Error al decodificar el JSON"]);
-        exit;
+        respuestaEstandar("Error al decodificar el JSON", 400);
+        
     }
 
     $producto = $abmProducto->baja($datos_arr);
     if($producto != null){
-        $response["status"] = 200;
-        $response["message"] = "Producto eliminado correctamente";
-        http_response_code($response["status"]);
-        echo json_encode($response);
-        die();
+        respuestaEstandar("Producto eliminado correctamente", 200);
     }else{
-        $response["status"] = 500;
-        $response["message"] = "Error al eliminar producto.";
-        http_response_code($response["status"]);
-        echo json_encode($response);
-        die();
+        respuestaEstandar("Error al eliminar producto.", 500);
     }
-}else{
-    http_response_code(405); // Method Not Allowed
-    echo json_encode(["error" => "Método no permitido"]);
-    die();
-}

@@ -115,16 +115,12 @@ const renderizarMenus = (menus) => {
 
 
 
-    obtenerMenus().then(menus => {
-        renderizarMenus(menus);
-    });
+ 
 
 
 
 
 
-
-});
 
 
 
@@ -221,3 +217,7 @@ async function actualizarTabla() {
     const menus = await obtenerMenus();
     renderizarMenus(menus);
 }
+
+obtenerMenus().then(menus => {
+    renderizarMenus(menus);
+});

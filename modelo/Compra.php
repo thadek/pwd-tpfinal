@@ -107,7 +107,7 @@ public function insertar(){
     $resp = false;
     $base = new BaseDatos();
     $sql = "INSERT INTO compra(cofecha, idusuario) 
-            VALUES (" . $this->getCoFecha() . ", '" . $this->getUsuario()->getIdUsuario() . "')";
+            VALUES ('" . $this->getCoFecha() . "', '" . $this->getUsuario()->getIdUsuario() . "')";
     if ($base->Iniciar()) {
 
         if($idCompra= $base->Ejecutar($sql)){

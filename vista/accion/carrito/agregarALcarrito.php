@@ -17,7 +17,8 @@ $abmCompraEstado = new AbmCompraEstado();
 
 //0000-00-00 00:00:00
 //$fechaactual = date("Y-d-m", strtotime("now"));
-$fechaactual = date("Y-m-d");
+date_default_timezone_set('America/Argentina/Buenos_Aires');
+$fechaactual = date("Y-m-d H:i:s");
 
 $param = array(
     'accion' => 'nuevo', 
@@ -46,15 +47,12 @@ $objCompra->setIdCompra($ultimoIdCompra);
 $objCompra->setCoFecha($fechaactual);
 $objCompra->setUsuario($usuario);
 
-//objEstadoTipo.
-$objEstadoTipo = new CompraEstadoTipo();
-$objEstadoTipo->cargar(0, "En carrito", "Producto sin iniciar la compra, en carrito");
 
 //parametros para el abmCompraestado
 $param2 = array(
     'accion' => 'nuevo', 
     'idcompraestadotipo' => 0,  // Puedes ajustar esto según tus necesidades
-    'idcompra' => $objCompra,  // Puedes ajustar esto según tus necesidades
+    'compra' => $objCompra,  // Puedes ajustar esto según tus necesidades
     'idestado' => $objEstadoTipo,  // Aquí asumo que 'usuario' es el objeto Usuario que necesitas para la relación
     'cefechaini' => $fechaactual,  // Este es un array vacío, puedes ajustarlo si tienes información específica de los ítems de la compra
     'cefechafin' => null,

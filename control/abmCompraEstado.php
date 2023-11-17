@@ -36,7 +36,7 @@ class AbmCompraEstado {
 
             $obj = new Compraestado();
             $obj->cargar(
-                $param['idcompraestado'],$param['idcompra'],$param['idcompraestadotipo'],$param['cefechaini'],$param['cefechafin']
+                $param['idcompraestado'],$param['compra'],$param['idcompraestadotipo'],$param['cefechaini'],$param['cefechafin']
             );
         }
         return $obj;

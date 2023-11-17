@@ -152,6 +152,27 @@ class AbmProducto {
     }
 
 
+ 
+  
+
+
+    /**
+     * Renderizar productos JSON
+     */
+    public function renderProductosJSON($id = null){
+        $listaProductosJSON = array();
+        $abmProducto = new AbmProducto();
+        $productos = $abmProducto->buscar($id);
+        foreach ($productos as $producto) {      
+            $prodJSON = $producto->jsonSerialize();
+            $prodJSON['acciones'] = renderBotonesAcciones($producto->getIdProducto());
+            array_push($listaProductosJSON,$prodJSON);
+           
+        }
+        return $listaProductosJSON;
+    }
+
+
 
 
 

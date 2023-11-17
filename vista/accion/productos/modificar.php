@@ -9,39 +9,22 @@ autorizar(["deposito"]);
 //$datos = darDatosSubmitted();
 
 $abmProducto = new AbmProducto();
+verificarMetodoHttp("POST");
+// Obtener el contenido de la petición
+$json_data = file_get_contents("php://input");
 
+// Decodificar el JSON
+$datos_arr = json_decode($json_data, true); // Si el segundo parámetro es true, se convierte en array asociativo
 
-if($_SERVER['REQUEST_METHOD'] === 'PUT'){
-    // Obtener el contenido de la petición
-    $json_data = file_get_contents("php://input");
-    
-    // Decodificar el JSON
-    $datos_arr = json_decode($json_data, true); // Si el segundo parámetro es true, se convierte en array asociativo
+// Verificar si la decodificación fue exitosa
+if ($datos_arr === null && json_last_error() !== JSON_ERROR_NONE) {
+    respuestaEstandar("Error al decodificar el JSON", 400);
+    exit;
+}
 
-    // Verificar si la decodificación fue exitosa
-    if ($datos_arr === null && json_last_error() !== JSON_ERROR_NONE) {
-        http_response_code(400); // Bad Request
-        echo json_encode(["error" => "Error al decodificar el JSON"]);
-        exit;
-    }
-
-    $producto = $abmProducto->modificacion($datos_arr);
-    if($producto != null){
-        $response["status"] = 200;
-        $response["message"] = "Producto modificado correctamente";
-        http_response_code($response["status"]);
-        echo json_encode($response);
-        die();
-    }else{
-        $response["status"] = 500;
-        $response["message"] = "Error al modificar producto.";
-        http_response_code($response["status"]);
-        echo json_encode($response);
-        die();
-    }
-
-}else{
-    http_response_code(405); // Method Not Allowed
-    echo json_encode(["error" => "Método no permitido"]);
-    die();
+$producto = $abmProducto->modificacion($datos_arr);
+if ($producto != null) {
+    respuestaEstandar("Producto modificado correctamente", 200);
+} else {
+    respuestaEstandar("Error al modificar producto.", 500);
 }

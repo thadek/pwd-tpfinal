@@ -10,6 +10,8 @@ function darDatosSubmitted(){
     foreach($_POST as $key => $value){
         $datos[$key] = $value;
     }
+    
+
     return $datos;
 }
 
@@ -38,3 +40,12 @@ spl_autoload_register(function ($class_name) {
 
     
 });
+
+
+function renderBotonesAcciones($id){
+    $html = '
+    <div class="btn btn-outline-info m-2" onclick="editarProducto('.$id.')"> Modificar</div>
+    <div class="btn btn-outline-danger m-2" onclick="borrarProducto('.$id.')"> Borrar </div>
+    ';
+    return $html;
+}

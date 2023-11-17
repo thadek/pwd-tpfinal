@@ -11,10 +11,7 @@ $abmProducto = new AbmProducto();
 
 
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-
-    
-    
+    verificarMetodoHttp("POST");
     // Obtener el contenido de la petición
     $json_data = file_get_contents("php://input");
     
@@ -23,30 +20,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Verificar si la decodificación fue exitosa
     if ($datos_arr === null && json_last_error() !== JSON_ERROR_NONE) {
-        http_response_code(400); // Bad Request
-        echo json_encode(["error" => "Error al decodificar el JSON"]);
+        respuestaEstandar("Error al decodificar el JSON", 400);
         exit;
     }
 
     
         $producto = $abmProducto->alta($datos_arr);
         if($producto != null){
-            $response["status"] = 200;
-            $response["message"] = "Producto agregado correctamente";
-            http_response_code($response["status"]);
-            echo json_encode($response);
+            respuestaEstandar("Producto agregado correctamente", 200);
         }else{
-            $response["status"] = 500;
-            $response["message"] = "Error al agregar producto.";
-            http_response_code($response["status"]);
-            echo json_encode($response);
+            respuestaEstandar("Error al agregar producto.", 500);
         }
 
-} else {
-    // Si la petición no es POST, puedes devolver un código de respuesta HTTP apropiado
-    http_response_code(405); // Method Not Allowed
-    echo json_encode(["error" => "Método no permitido"]);
-}
+
 
 ?>
 
