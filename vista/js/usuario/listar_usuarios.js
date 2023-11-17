@@ -1,18 +1,36 @@
 $(document).ready(function(){
 
-    const obtenerUsuarios = async () => {
-        const url = './accion/usuario/accionListarUsuarios.php';
-        const respuesta = await fetch(url);
-        const usuarios = await respuesta.json();
-        return usuarios;
-    }
+    obtenerUsuarios().then(usuarios =>{
+        renderizarUsuarios(usuarios);
+    });
 
+});
     const renderizarUsuarios = (usuarios) =>{
+
         const contenedor = $('#tabla');
+
+        let tabla = `<table class="table table-dark">
+        <thhead>
+        <tr>
+        <th>ID Usuario</th>
+        <th>Nombre</th>
+        <th>Correo</th>
+        <th>Roles</th>
+        <th>Estado</th>
+        <th>Acciones</th>
+        <th></th>
+        </tr>
+        </thhead>
+        `
+
+
+
+
+
         usuarios.forEach(usuario =>{
             
             if(usuario.usDeshabilitado == null){
-                usuario.usDeshabilitado = 'Activo';
+                usuario.usDeshabilitado = 'Habilitado';
             }
 
 
@@ -45,29 +63,82 @@ $(document).ready(function(){
 
 
 
-            const $usuario = $(`
+            tabla+=`
             <tr>
-                        <td>${usuario.idUsuario}</td>
-                        <td>${usuario.usNombre}</td>
-                        <td>${usuario.usMail}</td>
-                        <td>${roles}</td>
-                        <td>${usuario.usDeshabilitado}</td>
-                        <td>
-                            <a class="btn btn-outline-info m-2" role="button" href="modificar.php?accion=editar&idusuario=${usuario.idusuario}">editar</a>
-                            <a class="btn btn-outline-danger m-2" role="button" href="modificar.php?accion=borrar&idusuario=${usuario.idusuario}">borrar</a>
-                        </td>
-                    </tr>
-            `);
-            contenedor.append($usuario);
+            <td>${usuario.idUsuario}</td>
+            <td>${usuario.usNombre}</td>
+            <td>${usuario.usMail}</td>
+            <td>${roles}</td>
+            <td>${usuario.usDeshabilitado}</td>
+            <td><button class="btn btn-outline-info m-2" onclick="modificarUsuario(${usuario.idUsuario})">Editar</button></td>
+        </tr>
+        `});
 
-        });
+        tabla += `</table>`
+
+        contenedor.html(tabla);
+
 
     }
 
-    obtenerUsuarios().then(usuarios =>{
-        console.log(usuarios);
+    /*obtenerUsuarios().then(usuarios =>{
         renderizarUsuarios(usuarios);
-    })
+    });*/
 
 
-})
+    
+
+//});
+
+const obtenerUsuarios = async () => {
+    const respuesta = await fetch('http://localhost/pwd/pwd-tpfinal/vista/accion/usuario/accionListarUsuarios.php');
+    const usuarios = await respuesta.json();
+    return usuarios;
+}
+
+
+const obtenerUsuarioPorId = async (idUsuario) => {
+    const response = await fetch(`http://localhost/pwd/pwd-tpfinal/vista/accion/usuario/accionListarUsuarios.php?idUsuario=${idUsuario}`);
+    const usuario = await response.json();
+    return usuario;
+
+}
+
+
+
+const modificarUsuario = async(idUsuario) => {
+    const usuario =  obtenerUsuarioPorId(idUsuario);
+    //const roles = usuario.roles.map((rol) => rol.roles.idRol);
+
+    Swal.fire({
+        title: 'Editar usuario',
+        html:
+          `<input id="usNombre" class="swal2-input" placeholder="Nombre" value="${usuario.usNombre || ''}">` +
+          `<input id="usMail" class="swal2-input" placeholder="Email" value="${usuario.usMail || ''}">` +
+          `<select id="roles" class="swal2-select" multiple>
+                <option value="1" ${roles.includes(1) ? 'selected' : ''}>Admin</option>
+                <option value="2" ${roles.includes(2) ? 'selected' : ''}>Cliente</option>
+                <option value="3" ${roles.includes(3) ? 'selected' : ''}>Depósito</option>
+                <!-- Agrega las opciones de roles restantes aquí -->
+            </select>`+ 
+          `<input id="usPass" type="password" class="swal2-input" placeholder="Contraseña" value="${usuario.usPass || ''}">` +
+          `<select id="usDeshabilitado" class="swal2-select" placeholder="Deshabilitado">` +
+          `<option value="true" ${usuario.usDeshabilitado ? 'selected' : ''}>Sí</option>` +
+          `<option value="false" ${usuario.usDeshabilitado ? '' : 'selected'}>No</option>` +
+          `</select>`,
+        focusConfirm: false,
+        preConfirm: () => {
+          return {
+            usNombre: document.getElementById('usNombre').value,
+            usMail: document.getElementById('usMail').value,
+            roles: document.getElementById('roles').value,
+            usPass: document.getElementById('usPass').value,
+            usDeshabilitado: document.getElementById('usDeshabilitado').value === 'true'
+          };
+        }
+      });
+
+
+  
+      
+}

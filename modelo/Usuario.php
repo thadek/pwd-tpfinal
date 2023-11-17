@@ -203,6 +203,7 @@ class Usuario {
             'idUsuario' => $this->getIdUsuario(),
             'usNombre' => $this->getUsNombre(),
             'usMail' => $this->getUsMail(),
+            'usPass' => $this->getUsPass(),
             'roles' => $roles,
             'usDeshabilitado' => $this->getUsDeshabilitado()
         ];
