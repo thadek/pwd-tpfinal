@@ -46,13 +46,13 @@ class ABMIniciarCompra{
         
         //objEstadoTipo.
         $objEstadoTipo = new CompraEstadoTipo();
-        $objEstadoTipo->cargar(0, "En carrito", "Producto sin iniciar la compra, en carrito");
+        $objEstadoTipo->setIdCompraEstadoTipo(0);
         
         //parametros para el abmCompraestado.
         $param2 = array(
             'accion' => 'nuevo', 
             'idcompraestado' => 0,  // Puedes ajustar esto según tus necesidades
-            'idcompra' => $objCompra,  // Puedes ajustar esto según tus necesidades
+            'compra' => $objCompra,  // Puedes ajustar esto según tus necesidades
             'idcompraestadotipo' => $objEstadoTipo,  // Aquí asumo que 'usuario' es el objeto Usuario que necesitas para la relación
             'cefechaini' => $fechaactual,  // Este es un array vacío, puedes ajustarlo si tienes información específica de los ítems de la compra
             'cefechafin' => null,
