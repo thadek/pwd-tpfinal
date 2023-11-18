@@ -159,6 +159,11 @@ class AbmCompraEstado {
         return $ultimoEstado;   
     }
 
+
+ 
+
+
+
     /**
      * Cambia el estado de una compra siempre que el estado que se quiera cambiar sea mayor al ultimo estado de la compra
      * @param int $idCompra
@@ -184,6 +189,8 @@ class AbmCompraEstado {
 
             $compra = new Compra();
             $compra->setIdCompra($idCompra);
+
+           
 
             $estado = new CompraEstadoTipo();
             $estado->setIdCompraEstadoTipo($idEstado);

@@ -1,7 +1,7 @@
 <?php
 
 require_once '../../../configuracion.php';
-autorizar(['cliente','deposito']);
+
 
 $datos = darDatosSubmitted();
 

@@ -30,5 +30,3 @@ $_SERVER['LOGIN'] = $LOGIN;
 $_SERVER['PRINCIPAL'] = $PRINCIPAL;
 $_SERVER['REGISTRARSE'] = $REGISTRARSE;
 $_SERVER['RUTAVISTA'] = $RUTAVISTA;
-
-include_once($ROOT.'/utils/autorizar.php');

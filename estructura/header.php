@@ -1,5 +1,9 @@
 <?php
 
+$session = new Session();
+
+$session->autorizarPeticion();
+
 echo <<<HEADER
 <!DOCTYPE html>
 <html lang="en">
@@ -36,5 +40,7 @@ echo <<<HEADER
 
     
 </head>
+
+
 
 HEADER;

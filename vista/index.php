@@ -2,7 +2,7 @@
 
 include_once("../configuracion.php");
 include_once("../estructura/header.php");
-//autorizar(["visitante","admin","cliente"]);
+
 ?>
 
 

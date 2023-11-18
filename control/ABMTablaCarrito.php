@@ -86,8 +86,6 @@ class ABMTablaCarrito {
         $usuario = $session->getUsuario();
         $idusuario = $usuario->getIdUsuario();
 
-
-        //vamos a cambiar el estado de las compras del usuario a 1, que significa que estan confirmadas.
         $abmCompra = new AbmCompra();
         $abmCompraEstado = new AbmCompraEstado();
 

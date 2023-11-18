@@ -7,7 +7,7 @@ $rutalogo = "./img/";
 include_once("../estructura/Navbar.php");
 $datos = darDatosSubmitted();
 
-autorizar(['cliente', 'deposito']);
+
 ?>
 
 <!DOCTYPE html>

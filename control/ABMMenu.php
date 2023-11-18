@@ -150,6 +150,26 @@ class ABMMenu{
     }
     
 
+
+    /**
+     * Elimina y inserta nuevamente todas las tuplas menurol 
+     * que tengan el idmenu pasado por parametro para actualizar 
+     * los permisos de visualizacion de ese menu
+     */
+    public function actualizarPermisos($idMenu,$arrRoles){
+        $bd = new BaseDatos();
+        $sql = "DELETE FROM menurol WHERE idmenu = ".$idMenu;
+        //Primero elimino todas las tuplas asociadas a ese menu
+        $bd->Ejecutar($sql);
+        
+        //FALTA TERMINAR
+
+    }
+
+
+
+
+
     /**
      * Dado un id de rol, devuelve un arreglo de objetos Menu asociados a ese rol
      * @param int $idRol
@@ -168,12 +188,10 @@ class ABMMenu{
                 $menu = $menu[0];
                 array_push($arr_menus,$menu);
             }
-          
-           
+             
         }
         return $arr_menus;
     }
-
 
 
     /**
