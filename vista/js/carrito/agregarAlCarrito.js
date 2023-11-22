@@ -10,8 +10,7 @@ $(document).on('click', '[data-id]', function() {
             console.log(response);
             Swal.fire({
                 title: response.message,
-                icon: "success",
-                text: "Bicicleta Agregada al carrito",
+                icon: "info",
                 timer: 2000,
                 timerProgressBar: true,
             });

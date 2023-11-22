@@ -140,59 +140,50 @@ class abmCompra {
 
 
 
-    public function obtener_compra_borrador_de_usuario($idUsuario){
-        $objCompra = new abmCompra();
-        $compraBorrador = null;
- 
-        $comprasUsuario = $objCompra->buscar(array('idusuario' => $idUsuario));
 
-		if(is_array($comprasUsuario) && $comprasUsuario != null){
-			foreach($comprasUsuario as $compra){
-				$estado = new abmCompraestado();
-				$estadoBorrador = $estado->buscar(array('idcompra' => $compra->getIdcompra(), 'idcompraestadotipo' => 0,'cefechafin' => NULL ));
-				if( $estadoBorrador != null && $estadoBorrador[0]->getCefechafin() == '0000-00-00 00:00:00'){
-					$compraBorrador = $objCompra->buscar(array('idcompra' =>$compra->getIdcompra(),'idusuario' =>$idUsuario));
-				}
-			}
-		}
 
-        return $compraBorrador;
-    }
 
-    public function contarCarrito($idUsuario)
-    {
-        $totalcantidad = 0;
-        $compraBorrador = $this->obtener_compra_borrador_de_usuario($idUsuario);
-        if($compraBorrador != null){
-            $objCompraItem = new abmCompraitem();
-            $productos = $objCompraItem->buscar(array('idcompra' => $compraBorrador[0]->getIdcompra()));
-
-            foreach($productos as $prd){
-                $totalcantidad += $prd->getCicantidad();
-            }
-        }
-        return $totalcantidad;
-    }
 
 
     /**
      * Devuelve un arreglo de compras que poseen ese estado enviado por parametro como estado actual.
      */
     public function obtenerComprasPorEstado($estado_code){
-        $arr_compras = Compra::listar();
-        $arr_salida = array();
-        foreach($arr_compras as $compra){
-            $arr_estados = $compra->getEstados();
-            foreach($arr_estados as $estado){
-                if($estado->getCompraEstadoTipo()->getIdCompraEstadoTipo() == $estado_code and $estado->getCeFechaFin() == null){
-                    array_push($arr_salida, $compra);
-                }
+        $arr_compras = [];
+        $bd = new BaseDatos();
+        $sql = "SELECT * FROM compraestado ce, compra c WHERE ce.idcompra = c.idcompra AND ce.idcompraestadotipo = $estado_code AND ce.cefechafin IS NULL";
+
+        $res = $bd->Ejecutar($sql);
+        if ($res > 0) {
+            while ($row = $bd->Registro()) {  
+                $obj = new Compra();
+                $usr = new Usuario();
+                $usr->setIdUsuario($row['idusuario']);
+                $usr->buscar();
+                $items = CompraItem::listar("idcompra = ".$row['idcompra']);
+                $estados = CompraEstado::listar("idcompra = ".$row['idcompra']);
+                $obj->cargar($row['idcompra'], $row['cofecha'], $usr, $items, $estados);
+                array_push($arr_compras, $obj);
             }
         }
 
-       return $arr_salida;
+       return $arr_compras;
        
     }
+
+
+    /**
+     * Listar todas las compras en JSON
+     */
+    public function listarCompras(){
+        $compra = $this->buscar(null);
+        $compraJSON = array();
+        foreach ($compra as $compra) {
+            array_push($compraJSON,$compra->jsonSerialize());
+        }
+        handleResponse($compraJSON);
+    }
+
 
     /**
      * Devuelve un string del ultimo estado de la compra

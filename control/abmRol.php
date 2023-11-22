@@ -152,11 +152,10 @@ class ABMRol{
     
 
      /**
-     * Funcion que recibe el id de rol y el string del archivo php donde se invoco el interprete,  realiza una consulta sql especifica entre
-     * la tabla menurol y menu para obtener el link del menu que se quiere acceder y si el mismo posee el id de rol asignado para visualizar, 
-     * caso contrario devuelve false
+     * Funcion que recibe el id de rol, y realiza una consulta sql especifica entre
+     * la tabla menurol y menu para obtener el link del menu que se quiere acceder y si el mismo posee el id de rol asignado para visualizar
+     * devuelve true, caso contrario devuelve false   
      * @param int $idRol
-     * @param string $url
      * @return boolean
      */
     public function obtenerAutorizacionPorRol($idRol){

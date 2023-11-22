@@ -3,8 +3,10 @@
 require_once('../../../configuracion.php');
 $datos = darDatosSubmitted();
 
-$objAbmtablacarrito = new ABMTablaCarrito();
+$abmCarrito = new ABMCarrito();
 
-$objAbmtablacarrito->iniciarCompra();
+$abmCarrito->iniciarCompra();
+
+respuestaEstandar("Compra iniciada",200);
 
 

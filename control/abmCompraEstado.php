@@ -190,11 +190,13 @@ class AbmCompraEstado {
             $compra = new Compra();
             $compra->setIdCompra($idCompra);
 
+            //Si el estado es cancelado devuelvo el stock
+            if($idEstado == 4 && $id_estado_anterior == 2){
+                $resp = $this->devolverStock($idCompra);
+            }
            
-
             $estado = new CompraEstadoTipo();
             $estado->setIdCompraEstadoTipo($idEstado);
-
 
             $nuevoEstado->cargar(null,$compra,$estado,date("Y-m-d H:i:s"),null);
             //Inserto el nuevo estado
@@ -228,6 +230,25 @@ class AbmCompraEstado {
         return $resp;
     }
 
+
+    public function devolverStock($idCompra){
+        $resp = ["status"=>false,"msg"=>"No se pudo devolver el stock"];
+        
+
+        //Devolver stock de los productos cancelados
+        $compra = new Compra();
+        $compra->setIdCompra($idCompra);
+        $compra->buscar();
+        $items = $compra->getItems();
+        foreach($items as $item){
+            $item->getProducto()->setProcantstock($item->getProducto()->getProcantstock() + $item->getCicantidad());
+            $item->getProducto()->modificar();
+        }
+
+        $resp = ["status"=>true,"msg"=>"Se devolvio el stock"];
+        return $resp;
+
+    }
 
 
 

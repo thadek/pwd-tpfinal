@@ -12,9 +12,8 @@ $session = new Session();
 
 $idproducto = $datos["idProducto"];
 
-$abmIniciarCompra = new ABMIniciarCompra();
-
-$resp = $abmIniciarCompra->abm($idproducto);
+$abmCarrito = new AbmCarrito();
+$resp = $abmCarrito->agregarItemAlCarrito($idproducto,1);
 
 if($resp){
     respuestaEstandar($resp['message'],$resp['status']);

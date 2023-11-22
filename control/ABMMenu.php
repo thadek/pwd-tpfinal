@@ -139,8 +139,14 @@ class ABMMenu{
                 $where.=" and medescripcion =".$param['medescripcion'];
             if  (isset($param['idpadre']))
                  $where.=" and idpadre ='".$param['nombre']."'";
-            if  (isset($param['medeshabilitado']))
-                $where.=" and medeshabilitado IS NULL";
+            if  (isset($param['medeshabilitado'])){
+                if($param['medeshabilitado'] == 'NULL'){
+                    $where.=" and medeshabilitado IS NULL";
+                }else{
+                    $where.=" and medeshabilitado ='".$param['medeshabilitado']."'";
+                }
+            }
+               
         }
 
         $obj = new Menu();

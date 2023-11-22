@@ -3,9 +3,13 @@
 require_once('../../../configuracion.php');
 $datos = darDatosSubmitted();
 
-$abmtablacarrito = new ABMTablaCarrito();
+verificarMetodoHttp("POST");
 
-$abmtablacarrito->vaciarCarrito();
+$abmCarrito = new AbmCarrito();
+$salida = $abmCarrito->vaciarCarrito();
+
+respuestaEstandar($salida['message'],$salida['status']);
+
 
 
 
