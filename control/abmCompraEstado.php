@@ -140,22 +140,25 @@ class AbmCompraEstado {
             if  (isset($param['cefechafin']))
                     $where.=" and cefechafin ='".$param['cefechafin']."'";
         }
-        $obj = new Compraestado();
+        $obj = new CompraEstado();
         $arreglo =  $obj->listar($where);   
         return $arreglo;
     }
 
 
     public function buscarUltimoEstadoCompra($idCompra){
-        //Obtengo el arreglo de estados de compra
-        $arreglo = $this->buscar("idcompra = ".$idCompra);
-        //Obtengo el ultimo estado de compra verificando que la fecha de fin sea null
+
+        $sql = "SELECT * FROM compraestado WHERE idcompra = ".$idCompra." AND cefechafin IS NULL";
+        $bd = new BaseDatos();
+        $resp = $bd->Ejecutar($sql);
         $ultimoEstado = null;
-        foreach($arreglo as $estado){
-            if($estado->getCefechafin() == null){
-                $ultimoEstado = $estado;
-            }
+        if($resp){
+            $row = $bd->Registro();
+            $ultimoEstado = new CompraEstado();
+            $ultimoEstado->setIdCompraEstado($row['idcompraestado']);
+            $ultimoEstado->buscar();
         }
+
         return $ultimoEstado;   
     }
 
@@ -178,7 +181,7 @@ class AbmCompraEstado {
         $ultimoEstado = $this->buscarUltimoEstadoCompra($idCompra);
         //Si el ultimo estado es distinto al que quiero cambiar y que sea mayor que el anterior (no puedo volver para atras una compra cancelada.)
         $id_estado_anterior = $ultimoEstado->getCompraEstadoTipo()->getIdCompraEstadoTipo();
-        
+
         if(($ultimoEstado != null) && ($id_estado_anterior != $idEstado) && ($idEstado > $id_estado_anterior)){
             //Seteo la fecha de fin del ultimo estado
             $ultimoEstado->setCefechafin(date("Y-m-d H:i:s"));

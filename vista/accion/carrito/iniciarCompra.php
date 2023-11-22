@@ -5,8 +5,8 @@ $datos = darDatosSubmitted();
 
 $abmCarrito = new ABMCarrito();
 
-$abmCarrito->iniciarCompra();
+$res = $abmCarrito->iniciarCompra();
 
-respuestaEstandar("Compra iniciada",200);
+respuestaEstandar($res['msg'],200);
 
 

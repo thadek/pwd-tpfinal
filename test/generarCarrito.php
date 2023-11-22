@@ -14,10 +14,8 @@ $compra = $abmCompra->crearCarrito();
 
 print_r($compra);*/
 
-$abmCarrito = new ABMCarrito();
+$compraestado = new AbmCompraEstado();
 
-$resultado1 = $abmCarrito->agregarItemAlCarrito(1,0);
-$resultado2 = $abmCarrito->agregarItemAlCarrito(3,3);
+$cambiarE = $compraestado->cambiarEstadoDeCompra(25,1);
 
-print_r($resultado1);
-print_r($resultado2);
+print_r($cambiarE);
