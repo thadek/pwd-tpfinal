@@ -141,79 +141,6 @@ class abmCompra {
 
 
 
-
-
-
-
-    /**
-     * Devuelve un arreglo de compras que poseen ese estado enviado por parametro como estado actual.
-     */
-    public function obtenerComprasPorEstado($estado_code){
-        $arr_compras = [];
-        $bd = new BaseDatos();
-        $sql = "SELECT * FROM compraestado ce, compra c WHERE ce.idcompra = c.idcompra AND ce.idcompraestadotipo = $estado_code AND ce.cefechafin IS NULL";
-
-        $res = $bd->Ejecutar($sql);
-        if ($res > 0) {
-            while ($row = $bd->Registro()) {  
-                $obj = new Compra();
-                $usr = new Usuario();
-                $usr->setIdUsuario($row['idusuario']);
-                $usr->buscar();
-                $items = CompraItem::listar("idcompra = ".$row['idcompra']);
-                $estados = CompraEstado::listar("idcompra = ".$row['idcompra']);
-                $obj->cargar($row['idcompra'], $row['cofecha'], $usr, $items, $estados);
-                array_push($arr_compras, $obj);
-            }
-        }
-
-       return $arr_compras;
-       
-    }
-
-
-    public function obtenerComprasPorEstadoSerializadas($estado_code){
-        $arr_compras = [];
-        $bd = new BaseDatos();
-        $sql = "SELECT * FROM compraestado ce, compra c WHERE ce.idcompra = c.idcompra AND ce.idcompraestadotipo = $estado_code AND ce.cefechafin IS NULL";
-
-        $res = $bd->Ejecutar($sql);
-        $compra = [];
-        if ($res > 0) {
-            while ($row = $bd->Registro()) {  
-                
-                $usr = new Usuario();
-                $usr->setIdUsuario($row['idusuario']);
-                $usr->buscar();
-                $compra['idcompra'] = $row['idcompra'];
-                $compra['usuario'] = $usr->getUsNombre();
-                $compra['items'] = $this->obtenerCantidadItems($row['idcompra']);
-                $estados = CompraEstado::listar("idcompra = ".$row['idcompra']." AND cefechafin IS NULL");
-                $compra['estado'] = array('id'=>$estados[0]->getCompraEstadoTipo()->getIdCompraEstadoTipo(),'descripcion'=>$estados[0]->getCompraEstadoTipo()->getCetDescripcion());
-               // $obj->cargar($row['idcompra'], $row['cofecha'], $usr, $items, $estados);
-                array_push($arr_compras, $compra);
-            }
-        }
-
-       return $arr_compras;
-       
-    }
-
-
-    public function obtenerCantidadItems($idCompra){
-        $bd = new BaseDatos();
-        $sql = "SELECT SUM(ci.cicantidad) as cantidad FROM compraitem ci WHERE ci.idcompra = $idCompra";
-        $res = $bd->Ejecutar($sql);
-        $cantidad = 0;
-        if ($res > 0) {   
-            $cantidad = intval($bd->Registro()['cantidad']);
-        }
-        return $cantidad;
-    }
-
-
-
-
     /**
      * Funcion que se usa en el area de administracion para listar las compras por estado
      * Devuelve un arreglo de compras agrupadas por estado, sin incluir las compras en estado carrito.
@@ -221,10 +148,10 @@ class abmCompra {
      */
     public function obtenerComprasPorTodosLosEstados(){
         $arr_compras = [];
-        $arr_porconfirmar = $this->obtenerComprasPorEstadoSerializadas(COMPRA_PORCONFIRMAR);
-        $arr_confirmadas = $this->obtenerComprasPorEstadoSerializadas(COMPRA_CONFIRMADA);
-        $arr_enviadas = $this->obtenerComprasPorEstadoSerializadas(COMPRA_ENVIADA);
-        $arr_canceladas = $this->obtenerComprasPorEstadoSerializadas(COMPRA_CANCELADA);
+        $arr_porconfirmar = CompraEstado::obtenerComprasPorEstadoSerializadas(COMPRA_PORCONFIRMAR);
+        $arr_confirmadas = CompraEstado::obtenerComprasPorEstadoSerializadas(COMPRA_CONFIRMADA);
+        $arr_enviadas = CompraEstado::obtenerComprasPorEstadoSerializadas(COMPRA_ENVIADA);
+        $arr_canceladas = CompraEstado::obtenerComprasPorEstadoSerializadas(COMPRA_CANCELADA);
 
         $arr_compras = array("porconfirmar"=>$arr_porconfirmar, "confirmadas"=>$arr_confirmadas, "enviadas"=>$arr_enviadas, "canceladas"=>$arr_canceladas);
         return $arr_compras;

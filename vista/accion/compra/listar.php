@@ -34,7 +34,7 @@ function buscarCompraPorId($id){
 
 function buscarPorEstado($estado){
     $abmCompra = new AbmCompra();
-    $compra = $abmCompra->obtenerComprasPorEstado($estado);
+    $compra = CompraEstado::obtenerComprasPorEstado($estado);
     $compraJSON = array();
     foreach ($compra as $compra) {
         array_push($compraJSON,$compra->jsonSerialize());
