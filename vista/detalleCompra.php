@@ -6,8 +6,6 @@ include_once("../estructura/header.php");
 ?>
 
 
-
-
 <body class=" bg-dark  ">
 
     <?php
@@ -18,20 +16,14 @@ include_once("../estructura/header.php");
 
 
 
-  
 
-    <main class="container-fluid cont container text-center text-light">
 
-        <h1>
-            ¡Hola!
-        </h1>
-        <br />
-        <h2>
-            Te damos la bienvenida al Trabajo Práctico Final.
-        </h2>
-        <p>
-            Desplazate por el menu superior para acceder a los ejercicios.
-        </p>
+    <main class="container-fluid container  text-center text-light">
+
+
+
+        <div id="detallecompra"></div>
+
 
     </main>
 
@@ -45,6 +37,7 @@ include_once("../estructura/header.php");
 
 </body>
 
+<script src="./js/compras/detalleCompra.js"></script>
 
 
 </html>

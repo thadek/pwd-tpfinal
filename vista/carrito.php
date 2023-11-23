@@ -1,85 +1,125 @@
 <?php
-$Titulo = "Carrito";
+
 include_once("../configuracion.php");
 include_once("../estructura/header.php");
-include_once("../estructura/menu/menu.php");
-$rutalogo = "./img/";
-include_once("../estructura/Navbar.php");
-$datos = darDatosSubmitted();
 
-autorizar(['cliente', 'deposito']);
 ?>
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link type="text/css" rel="stylesheet" href="css/styles.css">
-</head>
-<body class="bg-dark">
-    <h3 class="text-white text-center my-3">Carrito</h3>
 
-    <div class="table-responsive">
-        
+
+
+<body class=" bg-dark  ">
+
+
     <?php
-    $html = new ABMIniciarCompra();
-    $html = $html->traerCarrito();
-    echo $html;
+
+    include_once("../estructura/menu/menu.php");
+    include_once("../estructura/Navbar.php");
     ?>
 
-    </div>
 
-    <table>
-        <tr>
-            <td>
-                <button class="btn btn-success" onclick="vaciarCarrito()">Vaciar carrito</button>
-            </td>
-            <td>
-                <button class="btn btn-success" onclick="iniciarCompra()">Iniciar compra</button>
-            </td>
-        </tr>
-    </table>
-   <!-- <div class="row float-right">
-        <div class="col-md-12 float-right">
-            <button class="btn btn-success" onclick="vaciarCarrito()">Vaciar carrito</button>
+<div class="loader">
+<div class="coast blanco">
+        <div class="wave-rel-wrap">
+          <div class="wave"></div>
         </div>
-    </div>
-
-    <div class="row">
-        <div class="col-md-12 float-right">
-            <button class="btn btn-success" onclick="iniciarCompra()">Iniciar compra</button>
+      </div>
+      <div class="coast delay">
+        <div class="wave-rel-wrap">
+          <div class="wave delay"></div>
         </div>
+      </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+    <main class="container-fluid container tablas container text-center text-light" data-bs-theme="dark">
+
+
+        <h2 class="text-white text-center"> <i class="fa-solid fa-cart-shopping"></i> Carrito</h2>
+
+        <div class="container text-light" id="contcarritocomp">
+            <div class="row d-flex justify-content-center my-4" id="cont-carrito">
+
+                <div class="col-md-8">
+                    <div class="card mb-4">
+                        <div class="card-header py-3">
+                            <h5 class="mb-0">Productos</h5>
+                        </div>
+                        <!-- Lista de productos dinámica -->
+                        <div class="card-body" id="listaproductos">
+                           
+                        </div>
+                    </div>
+
+
+                </div>
+
+                <!-- Resumen de compra -->
+                <div class="col-md-4">
+                    <div class="card mb-4">
+                        <div class="card-header py-3">
+                            <h5 class="mb-0">Resumen</h5>
+                        </div>
+                        <div class="card-body">
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 pb-0">
+                                    Subtotal
+                                    <span id="subtotal"></span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+                                    Envío Nacional
+                                    <span>Gratis</span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 mb-3">
+                                    <div>
+                                        <strong>Total compra</strong>
+
+                                    </div>
+                                    <span><strong id="total">$53.98</strong></span>
+                                </li>
+                            </ul>
+
+                            <button type="button" class="btn btn-outline-light btn-lg btn-block" onclick="enviarCompra()">
+                                Enviar compra
+                            </button>
+
+                            <button type="button" class="btn btn-outline-light btn-lg btn-block" onclick="vaciarCarrito()">
+                                Vaciar carrito
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+
+    </main>
+
+
+
+    <div class="contenedor">
     </div>
--->
-    <script>
 
-        // Función para vaciar el carrito
-        function vaciarCarrito() {
-            vaciarCarrito();
-            console.log("Vaciar carrito");
-        }
+    <script type="text/javascript" src="./js/carrito/listar.js"></script>
 
-        // Función para iniciar la compra (puedes redirigir a otra página aquí)
-        function iniciarCompra() {
-            // Aquí puedes agregar lógica para enviar los datos a tu backend y realizar acciones adicionales
-            // Luego, puedes redirigir al usuario a otra página, por ejemplo, "iniciar_compra.php"
-            iniciarCompra();
-            console.log("Iniciar compra");
-        }
 
-    </script>
-
-<div class="contenedor">
-    
-
-</div>
-<div class="fixed-bottom">
-    <?php include_once("../estructura/footer.php"); ?>
-</div>
+    <div class="fixed-bottom">
+        <?php include_once("../estructura/footer.php"); ?>
+    </div>
 
 </body>
-<script src="js/carrito/vaciarCarrito.js"></script>
-<script src="js/carrito/iniciarCompra.js"></script>
-<script src="js/carrito/eliminarCompra.js"></script>
+
+
+
 </html>

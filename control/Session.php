@@ -16,7 +16,6 @@ class Session {
         $resp = false;
         $obj = new ABMUsuario();
         $param['usnombre'] = $usr;
-        //$param['uspass'] = $password;
         $param['usdeshabilitado'] = null;
         $res = $obj->buscar($param);
         
@@ -52,6 +51,7 @@ class Session {
 
     /**
      * Devuelve un arreglo de objetos rol del usuario actual.
+     * @return Array<Roles>
      */
     public function getRoles(){
         $resp = null;
@@ -92,7 +92,7 @@ class Session {
             $roles = array_map(function($rol){
                 return $rol->getIdRol();
             },$roles);
-            //Si el rol que se quiere setear está entre los roles del usuario, se setea y devuelve true
+            
             if(in_array($idRol,$roles)){
                 $resp = true;
                 $_SESSION['idrol'] = $idRol;
@@ -116,6 +116,9 @@ class Session {
     }
 
 
+    /**
+     * Valida que la sesion sea válida y obtiene el objeto rol perteneciente al usuario logueado.
+     */
     public function getRol(){
         if($this->validar()){
             $obj = new ABMRol();
@@ -156,4 +159,16 @@ class Session {
         return $salida;
     }
 
+
+    public function autorizarPeticion(){  
+        $autorizado = false;
+        $abmRol = new AbmRol();
+        $autorizado = $abmRol->obtenerAutorizacionPorRol($this->getIdRol());
+        if(!$autorizado){
+            header('Location:'.$_SERVER['RUTAVISTA']);
+        }
+        return $autorizado;
+    }
+
+    
 }

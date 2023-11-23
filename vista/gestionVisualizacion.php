@@ -23,20 +23,13 @@ include_once("../estructura/header.php");
     <main class="container-fluid tablas container text-center text-light">
 
 
-        <h1>Gestión de productos</h1>
-        <table class="table table-dark table-striped" id="tablaprod">
+        <h1>Gestión de Visualización de menus</h1>
+        <table class="table table-dark table-striped" id="tablamenus">
             <thead>
                 <tr>
-                    <th>
-                        <div class="btn btn-outline-success" onclick="nuevoProducto()">Nuevo</div>
-                    </th>
-                </tr>
-                <tr>
                     <th> # </th>
-                    <th>Nombre</th>
-                    <th>Link</th>
-                    <th>Precio</th>
-                    <th>Stock</th>
+                    <th>Nombre Menu</th>
+                    <th>Rol autorizado</th>
                     <th>Acciones</th>
 
                 </tr>
@@ -55,7 +48,7 @@ include_once("../estructura/header.php");
 
 </body>
 
-<script type="text/javascript" src="./js/productos/gestionProductos.js">
+<script type="text/javascript" src="./js/menurol/gestion.js">
 </script>
 
 

@@ -3,7 +3,6 @@
     require_once '../../../configuracion.php';
     header('Content-Type: application/json');
     $datos = darDatosSubmitted();
-    autorizar(['admin']);
 
     $abmUsuario = new ABMUsuario();
     //obtengo lista de usuarios y roles

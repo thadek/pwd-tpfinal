@@ -8,21 +8,25 @@ $(document).ready(async function () {
 });
 
 
-const obtenerComprasPorEstado = async (estado) => {
-    const response = await fetch(`./accion/compra/listar.php?estado=${estado}`);
+const obtenerCompras = async () => {
+    const response = await fetch(`./accion/compra/listar.php`);
     const compras = await response.json();
     return compras;
 }
 
 const obtenerTodosLosTiposDeCompra = async () => {
-    const porconfirmar = await obtenerComprasPorEstado(1);
-    const aceptadas = await obtenerComprasPorEstado(2);
-    const enviadas = await obtenerComprasPorEstado(3);
-    const canceladas = await obtenerComprasPorEstado(4);
+    const todaslascompras = await obtenerCompras();
+    const porconfirmar = todaslascompras.porconfirmar;
+    const aceptadas = todaslascompras.confirmadas;
+    const enviadas = todaslascompras.enviadas;
+    const canceladas = todaslascompras.canceladas;
+
     return { porconfirmar, aceptadas, enviadas, canceladas };
 }
 
 const generarTablas = async () => {
+    $('#cargando').show(100).delay(500);
+    $('#cargando').hide(100).delay(600);
     const { porconfirmar, aceptadas, enviadas, canceladas } = await obtenerTodosLosTiposDeCompra();
     renderizarTabla(porconfirmar, estados[1]);
     renderizarTabla(aceptadas, estados[2]);
@@ -41,10 +45,7 @@ const estados = {
 
 const ultimoEstadoCompra = (compra) => {
     let salida = "";
-    const estado = compra.estados.filter(estado => estado.ceFechaFin === null);
-    if(estado.length > 0){
-    salida = estado[0].compraEstadoTipo;
-    }
+    salida = compra.estado
     return salida;
 }
 
@@ -82,8 +83,8 @@ const renderizarTabla = (compras, estado) => {
         const estadoCompra = ultimoEstadoCompra(compra);
         tabla += `<tr>
         <td>${compra.idcompra}</td>
-        <td>${compra.usuario.usNombre}</td>
-        <td>${compra.items.length}</td>
+        <td>${compra.usuario}</td>
+        <td>${compra.items}</td>
         <td>${renderizarEstado(estadoCompra)}</td>
         <td>${renderizarBotones(compra.idcompra,estado)}</td>
         </tr>`;
@@ -100,7 +101,7 @@ const renderizarTabla = (compras, estado) => {
 }
 
 
-const renderizarEstado = ({idCompraEstadoTipo:id,cetDescripcion:descripcion}) =>{
+const renderizarEstado = ({id,descripcion}) =>{
 
     let salida = "";
     switch (id) {

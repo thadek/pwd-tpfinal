@@ -140,24 +140,32 @@ class AbmCompraEstado {
             if  (isset($param['cefechafin']))
                     $where.=" and cefechafin ='".$param['cefechafin']."'";
         }
-        $obj = new Compraestado();
+        $obj = new CompraEstado();
         $arreglo =  $obj->listar($where);   
         return $arreglo;
     }
 
 
     public function buscarUltimoEstadoCompra($idCompra){
-        //Obtengo el arreglo de estados de compra
-        $arreglo = $this->buscar("idcompra = ".$idCompra);
-        //Obtengo el ultimo estado de compra verificando que la fecha de fin sea null
+
+        $sql = "SELECT * FROM compraestado WHERE idcompra = ".$idCompra." AND cefechafin IS NULL";
+        $bd = new BaseDatos();
+        $resp = $bd->Ejecutar($sql);
         $ultimoEstado = null;
-        foreach($arreglo as $estado){
-            if($estado->getCefechafin() == null){
-                $ultimoEstado = $estado;
-            }
+        if($resp){
+            $row = $bd->Registro();
+            $ultimoEstado = new CompraEstado();
+            $ultimoEstado->setIdCompraEstado($row['idcompraestado']);
+            $ultimoEstado->buscar();
         }
+
         return $ultimoEstado;   
     }
+
+
+ 
+
+
 
     /**
      * Cambia el estado de una compra siempre que el estado que se quiera cambiar sea mayor al ultimo estado de la compra
@@ -173,7 +181,7 @@ class AbmCompraEstado {
         $ultimoEstado = $this->buscarUltimoEstadoCompra($idCompra);
         //Si el ultimo estado es distinto al que quiero cambiar y que sea mayor que el anterior (no puedo volver para atras una compra cancelada.)
         $id_estado_anterior = $ultimoEstado->getCompraEstadoTipo()->getIdCompraEstadoTipo();
-        
+
         if(($ultimoEstado != null) && ($id_estado_anterior != $idEstado) && ($idEstado > $id_estado_anterior)){
             //Seteo la fecha de fin del ultimo estado
             $ultimoEstado->setCefechafin(date("Y-m-d H:i:s"));
@@ -185,9 +193,13 @@ class AbmCompraEstado {
             $compra = new Compra();
             $compra->setIdCompra($idCompra);
 
+            //Si el estado es cancelado devuelvo el stock
+            if($idEstado == 4 && $id_estado_anterior == 2){
+                $resp = $this->devolverStock($idCompra);
+            }
+           
             $estado = new CompraEstadoTipo();
             $estado->setIdCompraEstadoTipo($idEstado);
-
 
             $nuevoEstado->cargar(null,$compra,$estado,date("Y-m-d H:i:s"),null);
             //Inserto el nuevo estado
@@ -221,6 +233,25 @@ class AbmCompraEstado {
         return $resp;
     }
 
+
+    public function devolverStock($idCompra){
+        $resp = ["status"=>false,"msg"=>"No se pudo devolver el stock"];
+        
+
+        //Devolver stock de los productos cancelados
+        $compra = new Compra();
+        $compra->setIdCompra($idCompra);
+        $compra->buscar();
+        $items = $compra->getItems();
+        foreach($items as $item){
+            $item->getProducto()->setProcantstock($item->getProducto()->getProcantstock() + $item->getCicantidad());
+            $item->getProducto()->modificar();
+        }
+
+        $resp = ["status"=>true,"msg"=>"Se devolvio el stock"];
+        return $resp;
+
+    }
 
 
 

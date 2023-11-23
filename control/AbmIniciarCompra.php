@@ -1,8 +1,9 @@
 <?php
-
+/*
 class ABMIniciarCompra{
 
     public function abm($dato) {
+        date_default_timezone_set('America/Argentina/Buenos_Aires');
         $objSession = new Session();
         $usuario = $objSession->getUsuario();
         $idusuario = $usuario->getIdUsuario();
@@ -15,17 +16,19 @@ class ABMIniciarCompra{
         
         //0000-00-00 00:00:00
         //$fechaactual = date("Y-d-m", strtotime("now"));
-        $fechaactual = date("Y-m-d");
+        $fechaactual = date("Y-m-d H:i:s");
         
+
         $param = array(
             'accion' => 'nuevo', 
-            'cofecha' => $fechaactual,  // Puedes ajustar esto según tus necesidades
-            'idusuario' => $usuario,  // Aquí asumo que 'usuario' es el objeto Usuario que necesitas para la relación
-            'items' => []  // Este es un array vacío, puedes ajustarlo si tienes información específica de los ítems de la compra
+            'cofecha' => $fechaactual,  
+            'usuario' => $usuario,  
+            'items' => []  
         );
         
         $abmCompra->abm($param);
         
+        //buscamos la compra que se acaba de crear.
         $arreglo = [];
         $arreglo["idusuario"] = $idusuario; 
         
@@ -51,7 +54,6 @@ class ABMIniciarCompra{
         //parametros para el abmCompraestado.
         $param2 = array(
             'accion' => 'nuevo', 
-            'idcompraestado' => 0,  // Puedes ajustar esto según tus necesidades
             'compra' => $objCompra,  // Puedes ajustar esto según tus necesidades
             'idcompraestadotipo' => $objEstadoTipo,  // Aquí asumo que 'usuario' es el objeto Usuario que necesitas para la relación
             'cefechaini' => $fechaactual,  // Este es un array vacío, puedes ajustarlo si tienes información específica de los ítems de la compra
@@ -70,7 +72,6 @@ class ABMIniciarCompra{
         );
         
         $productoArreglo = $abmProducto->buscar($param3);
-        print_r($productoArreglo);
         
         //cargamos el obj producto.
         $objProducto->cargar($productoArreglo[0]->getIdProducto(), $productoArreglo[0]->getProNombre(), $productoArreglo[0]->getProDetalle(), $productoArreglo[0]->getPrecio(), $productoArreglo[0]->getProCantStock());
@@ -87,81 +88,22 @@ class ABMIniciarCompra{
         
         $abmCompraItem->abm($param4);
         
+        return ['status' => 200, 'message' => 'Compra iniciada'];
       
     }
 
     public function traerCarrito(){
-        //funcion que trae los datos de carrito de la base de datos.
-        $objSession = new Session();
-        $usuario = $objSession->getUsuario();
-        $idusuario = $usuario->getIdUsuario();
+       
 
-        $abmCompra = new AbmCompra();
-        $abmCompraItem = new AbmCompraItem();
-        $abmCompraEstado = new AbmCompraEstado();
+        $abmUsuario = new AbmUsuario();
+        $carrito = $abmUsuario->cargarCarritoUser();
 
-        $arreglo = [];
-        $arreglo["idusuario"] = $idusuario;
-
-        $compras = $abmCompra->buscar($arreglo);
-    
-
-        //ahora se recuperan todos los idcompra de las compras.
-        $idcompras = [];
-        foreach($compras as $compra){
-            array_push($idcompras, $compra->getIdCompra());
+        if(empty($carrito)){
+            return "<h3 class='text-white'>No hay productos en el carrito</h3>";
         }
-        
-        //ahora se verifican los estados de los idcompra, y se guaran en un array todos los idcompra que tengan idcompraestadotipo = 0.
-        $idcomprasEnCarrito = [];
-        foreach($idcompras as $idcompra){
-            $arreglo2 = [];
-            $arreglo2["idcompra"] = $idcompra;
-            $compraestados = $abmCompraEstado->buscar($arreglo2);
-            foreach($compraestados as $compraestado){
-                if($compraestado->getCompraEstadoTipo()->getIdCompraEstadoTipo() == 0){
-                    array_push($idcomprasEnCarrito, $compraestado->getCompra()->getIdCompra());
-                }
-            }
-        }
-        //print_r($idcomprasEnCarrito);
 
-        //ahora se recuperan todos los idcompraitem de las compras.
-        $idcompraitems = [];
-        foreach($idcomprasEnCarrito as $idcompra){
-            $arreglo3 = [];
-            $arreglo3["idcompra"] = $idcompra;
-            $compraitems = $abmCompraItem->buscar($arreglo3);
-            foreach($compraitems as $compraitem){
-                array_push($idcompraitems, $compraitem->getIdCompraItem());
-            }
-        }
-        //print_r($idcompraitems);
-
-        //Se recupera la cantidad de cada $idcomprasitem.
-        $cantidad = [];
-        foreach($idcompraitems as $idcompraitem){
-            $arreglo4 = [];
-            $arreglo4["idcompraitem"] = $idcompraitem;
-            $compraitems = $abmCompraItem->buscar($arreglo4);
-            foreach($compraitems as $compraitem){
-                array_push($cantidad, $compraitem->getCiCantidad());
-            }
-        }
-        //print_r($cantidad);
-
-        //ahora se recuperan todos los productos de los idcompraitem.
-        $productos = [];
-        foreach($idcompraitems as $idcompraitem){
-            $arreglo4 = [];
-            $arreglo4["idcompraitem"] = $idcompraitem;
-            $compraitems = $abmCompraItem->buscar($arreglo4);
-            foreach($compraitems as $compraitem){
-                array_push($productos, $compraitem->getProducto());
-            }
-        }
-        //print_r($productos);
-
+        $compraItems = $carrito[0]->getItems();
+      
 
         //Ahora hay que mostrar los productos en el carrito, una variable que tenga html y muestre en una tabla los productos con su id compra item, nombre, precio, cantidad, subtotal, y un boton para eliminar el producto del carrito.
         $html = "";
@@ -179,20 +121,20 @@ class ABMIniciarCompra{
         $html .= "<tbody>";
         $contador = 1;
         $total = 0;
-        $n = 0;
 
-        foreach($productos as $producto){
+
+        foreach($compraItems as $compraItem){
             $html .= "<tr>";
             $html .= "<th scope='row'>".$contador."</th>";
-            $html .= "<td>".$producto->getProNombre()."</td>";
-            $html .= "<td>$".$producto->getPrecio()."</td>";
-            $html .= "<td>$cantidad[$n]</td>";
-            $html .= "<td>$".($producto->getPrecio() * $cantidad[$n])."</td>";
-            $html .= "<td><button type='button' class='btn btn-outline-danger' onclick='eliminarCompra(" . $idcompraitems[$n] . ")'>Eliminar</button></td>";
+            $html .= "<td>".$compraItem->getProducto()->getProNombre()."</td>";
+            $html .= "<td>$".$compraItem->getProducto()->getPrecio()."</td>";
+            $html .= "<td>".$compraItem->getCiCantidad()."</td>";
+            $html .= "<td>$".($compraItem->getProducto()->getPrecio() * $compraItem->getCiCantidad())."</td>";
+            $html .= "<td><button type='button' class='btn btn-outline-danger' onclick='eliminarCompra(" . $compraItem->getIdCompraItem() . ")'>Eliminar</button></td>";
             $html .= "</tr>";
             $contador++;
-            $total += $producto->getPrecio() * $cantidad[$n];
-            $n++;
+            $total += $compraItem->getProducto()->getPrecio() * $compraItem->getCiCantidad();
+            
         }
         $html .= "</tbody>";
         $html .= "</table>";
@@ -201,5 +143,6 @@ class ABMIniciarCompra{
         return $html;
 
 
-    }
-}
+    } }
+    
+*/

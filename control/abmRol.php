@@ -151,6 +151,30 @@ class ABMRol{
     }
     
 
+     /**
+     * Funcion que recibe el id de rol, y realiza una consulta sql especifica entre
+     * la tabla menurol y menu para obtener el link del menu que se quiere acceder y si el mismo posee el id de rol asignado para visualizar
+     * devuelve true, caso contrario devuelve false   
+     * @param int $idRol
+     * @return boolean
+     */
+    public function obtenerAutorizacionPorRol($idRol){
+        $salida = false;
+        $bd = new BaseDatos();
+        $link = basename($_SERVER['SCRIPT_NAME']);  
+        $sql = "SELECT * FROM menurol mr INNER JOIN menu m ON mr.idmenu = m.idmenu WHERE mr.idrol = ".$idRol." AND m.link LIKE '%".$link."%'";
+        $resultado = $bd->Ejecutar($sql);
+        if($resultado  >0 && $resultado > -1){
+            $salida = true;
+        }
+        return $salida;
+
+    }
+
+
+
+
+
     /**
      * Devuelve un objeto rol con el nombre 'Visitante'
      * @return Rol
@@ -179,6 +203,17 @@ class ABMRol{
             $salida = $arreglo[0];
         }
         return $salida;
+    }
+
+
+
+    function obtenerRolesJSON(){
+        $roles = $this->buscar(null);
+        $rolesJSON = array();
+        foreach ($roles as $rol) {
+            array_push($rolesJSON,$rol->jsonSerialize());
+        }
+        return $rolesJSON;
     }
 
 }

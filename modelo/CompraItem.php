@@ -93,9 +93,8 @@ class CompraItem {
     public function insertar(){
         $respuesta = false;
         $base = new BaseDatos();
-        $sql = "INSERT INTO compraitem (idcompraitem, idproducto, idcompra, cicantidad)
+        $sql = "INSERT INTO compraitem (idproducto, idcompra, cicantidad)
         VALUES ('" 
-        . $this->getIdCompraItem() . "', '" 
         . $this->getProducto()->getIdProducto() . "', '" 
         . $this->getCompra()->getIdCompra() . "', '" 
         . $this->getCiCantidad() . "')";
@@ -115,8 +114,8 @@ class CompraItem {
     public function modificar(){
         $resp = false;
         $base = new BaseDatos();
-        $sql="UPDATE compraitem SET idproducto='".$this->getProducto()->getIdProducto()."', idcompra'".$this->getCompra()->getIdCompra()."', cicantidad'".$this->getCiCantidad().
-        "'  WHERE idcompraitem=".$this->getIdCompraItem();
+        $sql="UPDATE compraitem SET idproducto=".$this->getProducto()->getIdProducto().", idcompra=".$this->getCompra()->getIdCompra().", cicantidad=".$this->getCiCantidad().
+        "  WHERE idcompraitem=".$this->getIdCompraItem();
         if ($base->Iniciar()) {
             if ($base->Ejecutar($sql)) {
                 $resp = true;

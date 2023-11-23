@@ -1,5 +1,5 @@
 
-function vaciarCarrito() {
+function vacioElCarrito() {
     $.ajax({
         type: "POST",
         url: "accion/carrito/vaciarCarrito.php", // Reemplaza con la URL correcta de tu backend

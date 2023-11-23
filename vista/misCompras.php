@@ -23,20 +23,16 @@ include_once("../estructura/header.php");
     <main class="container-fluid tablas container text-center text-light">
 
 
-        <h1>Gestión de productos</h1>
-        <table class="table table-dark table-striped" id="tablaprod">
+        <h1>Mis Compras</h1>
+        <table class="table table-dark table-striped" id="tablamiscompras">
             <thead>
                 <tr>
-                    <th>
-                        <div class="btn btn-outline-success" onclick="nuevoProducto()">Nuevo</div>
-                    </th>
-                </tr>
-                <tr>
                     <th> # </th>
-                    <th>Nombre</th>
-                    <th>Link</th>
-                    <th>Precio</th>
-                    <th>Stock</th>
+                    <th>Fecha Compra</th>
+                    <th>Cant Items</th>          
+                    
+                    <th>Estado</th>
+                    <th>Total Compra</th>
                     <th>Acciones</th>
 
                 </tr>
@@ -55,7 +51,7 @@ include_once("../estructura/header.php");
 
 </body>
 
-<script type="text/javascript" src="./js/productos/gestionProductos.js">
+<script type="text/javascript" src="./js/compras/miscompras.js">
 </script>
 
 

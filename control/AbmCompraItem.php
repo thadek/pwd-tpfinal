@@ -29,10 +29,10 @@ class ABMCompraItem{
     private function cargarObjeto($param){
         $obj = null;
            
-        if( array_key_exists('idcompraitem',$param)  and array_key_exists('idproducto',$param)
-        and array_key_exists('idcompra',$param) and array_key_exists('cicantidad',$param)){
+        if( array_key_exists('idcompraitem',$param)  and array_key_exists('producto',$param)
+        and array_key_exists('compra',$param) and array_key_exists('cicantidad',$param)){
             $obj = new CompraItem();
-            $obj->cargar($param['idcompraitem'],$param['idproducto'],$param['idcompra'],$param['cicantidad']);
+            $obj->cargar($param['idcompraitem'],$param['producto'],$param['compra'],$param['cicantidad']);
         }
         return $obj;
     }

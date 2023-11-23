@@ -4,7 +4,7 @@ header('Content-Type: application/json');
 
 include_once('../../../configuracion.php');
 
-autorizar(["deposito"]);
+
 
 //$datos = darDatosSubmitted();
 

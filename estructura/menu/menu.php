@@ -120,6 +120,7 @@ if ($session->validar()) {
     <ul class="dropdown-menu dropdown-menu-end dropdown-menu-dark">
     <h6 class="dropdown-header">Hola, {$session->getUsuario()->getUsNombre()}</h6>
       <li><a class="dropdown-item" href="../vista/usuario.php"><i class="fa-regular fa-circle-user"></i> Mi cuenta</a></li>
+      <li><a class="dropdown-item" href="../vista/misCompras.php"><i class="fa-solid fa-money-bill-wave"></i> Mis compras</a></li>
       <li><a class="dropdown-item" href="../vista/logout.php"> <i class="fa-solid fa-right-from-bracket"></i> Cerrar sesión</a></li>
     </ul>
   </div>

@@ -189,6 +189,7 @@ class Usuario {
     public function serializeRoles(){
         $roles = array();
         foreach ($this->getRoles() as $rol) {
+            
             array_push($roles, $rol->jsonSerialize());
         }
         return $roles;
@@ -203,7 +204,6 @@ class Usuario {
             'idUsuario' => $this->getIdUsuario(),
             'usNombre' => $this->getUsNombre(),
             'usMail' => $this->getUsMail(),
-            'usPass' => $this->getUsPass(),
             'roles' => $roles,
             'usDeshabilitado' => $this->getUsDeshabilitado()
         ];

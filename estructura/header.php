@@ -1,5 +1,9 @@
 <?php
 
+$session = new Session();
+
+$session->autorizarPeticion();
+
 echo <<<HEADER
 <!DOCTYPE html>
 <html lang="en">
@@ -15,10 +19,13 @@ echo <<<HEADER
 
    <link type="text/css" rel="stylesheet" href="{$RUTAVISTA}/css/jsgrid.min.css" />
    <link type="text/css" rel="stylesheet" href="{$RUTAVISTA}/css/jsgrid-theme.min.css" />
+   <link type="text/css" rel="stylesheet" href="{$RUTAVISTA}/css/loader.css" />
 
    <script type="text/javascript" src="{$RUTAVISTA}/js/bootstrap.bundle.min.js"></script>
    <script type="text/javascript" src="{$RUTAVISTA}/js/jquery.js"></script>
    <script type="text/javascript" src="{$RUTAVISTA}/js/sweetalert2.js"></script>
+
+   
 
    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.css" />
   
@@ -34,5 +41,7 @@ echo <<<HEADER
 
     
 </head>
+
+
 
 HEADER;

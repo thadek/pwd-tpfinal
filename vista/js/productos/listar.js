@@ -42,8 +42,12 @@ $(document).ready(function () {
                    
                   
                    </div>
-                   ${btnAgregar}
-                   <div class="card-footer bg-navbar"> cantidad: ${producto.proCantStock} </div>
+                  <div> ${btnAgregar}
+
+                   
+
+
+                   <div class="card-footer bg-navbar"> En stock: ${producto.proCantStock} </div>
                    </div>
 
 

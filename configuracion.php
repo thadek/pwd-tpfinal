@@ -7,6 +7,7 @@ $page_title = "TP Final - Grupo 8 - PWD 2023";
 //variable que almacena el directorio del proyecto
 $ROOT = $_SERVER['DOCUMENT_ROOT'] . "/$PROYECTO/";
 
+include_once($ROOT . '/utils/estadosCompra.php');
 include_once ($ROOT . '/utils/functions.php');
 include_once($ROOT.'/utils/responseHandler.php');
 
@@ -30,5 +31,3 @@ $_SERVER['LOGIN'] = $LOGIN;
 $_SERVER['PRINCIPAL'] = $PRINCIPAL;
 $_SERVER['REGISTRARSE'] = $REGISTRARSE;
 $_SERVER['RUTAVISTA'] = $RUTAVISTA;
-
-include_once($ROOT.'/utils/autorizar.php');
