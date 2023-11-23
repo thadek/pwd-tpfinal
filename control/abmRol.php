@@ -152,21 +152,22 @@ class ABMRol{
     
 
      /**
-     * Funcion que recibe el id de rol, y realiza una consulta sql especifica entre
-     * la tabla menurol y menu para obtener el link del menu que se quiere acceder y si el mismo posee el id de rol asignado para visualizar
-     * devuelve true, caso contrario devuelve false   
+     * Función que recibe un idrol y obteniendo el archivo php actual hace una comparación 
+     * para autorizar o no una petición. 
      * @param int $idRol
      * @return boolean
      */
     public function obtenerAutorizacionPorRol($idRol){
-        $salida = false;
-        $bd = new BaseDatos();
-        $link = basename($_SERVER['SCRIPT_NAME']);  
-        $sql = "SELECT * FROM menurol mr INNER JOIN menu m ON mr.idmenu = m.idmenu WHERE mr.idrol = ".$idRol." AND m.link LIKE '%".$link."%'";
-        $resultado = $bd->Ejecutar($sql);
-        if($resultado  >0 && $resultado > -1){
-            $salida = true;
-        }
+        $salida = false;    
+        $link = basename($_SERVER['SCRIPT_NAME']);    
+        $arr_menus = Menu::listar("link LIKE '%".$link."%'"); 
+        if(count($arr_menus)>0){
+            $menu = $arr_menus[0];
+            $menurol = MenuRol::listar("idmenu = ".$menu->getIdMenu()." and idrol = ".$idRol);
+            if(count($menurol)>0){
+                $salida = true;
+            }       
+        }    
         return $salida;
 
     }
