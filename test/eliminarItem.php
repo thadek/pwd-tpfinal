@@ -13,9 +13,10 @@ $salida = $abmUsuario->cargarCarritoUser();
 $compra = $abmCompra->crearCarrito();
 
 print_r($compra);*/
-
+/*
 $abmCarrito = new ABMCarrito();
 
 $res = $abmCarrito->eliminarItem(17);
 
 print_r($res);
+*/

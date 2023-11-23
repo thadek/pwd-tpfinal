@@ -10,11 +10,32 @@ include_once("../estructura/header.php");
 
 <body class=" bg-dark  ">
 
+
     <?php
 
     include_once("../estructura/menu/menu.php");
     include_once("../estructura/Navbar.php");
     ?>
+
+
+<div class="loader">
+<div class="coast blanco">
+        <div class="wave-rel-wrap">
+          <div class="wave"></div>
+        </div>
+      </div>
+      <div class="coast delay">
+        <div class="wave-rel-wrap">
+          <div class="wave delay"></div>
+        </div>
+      </div>
+</div>
+
+
+
+
+
+
 
 
 
@@ -25,7 +46,7 @@ include_once("../estructura/header.php");
 
         <h2 class="text-white text-center"> <i class="fa-solid fa-cart-shopping"></i> Carrito</h2>
 
-        <div class="container text-light">
+        <div class="container text-light" id="contcarritocomp">
             <div class="row d-flex justify-content-center my-4" id="cont-carrito">
 
                 <div class="col-md-8">

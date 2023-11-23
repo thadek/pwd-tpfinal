@@ -13,9 +13,10 @@ $salida = $abmUsuario->cargarCarritoUser();
 $compra = $abmCompra->crearCarrito();
 
 print_r($compra);*/
-
+/*
 $compraestado = new AbmCompraEstado();
 
 $cambiarE = $compraestado->cambiarEstadoDeCompra(25,1);
 
 print_r($cambiarE);
+*/

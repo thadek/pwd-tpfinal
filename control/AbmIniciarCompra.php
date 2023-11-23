@@ -1,5 +1,5 @@
 <?php
-
+/*
 class ABMIniciarCompra{
 
     public function abm($dato) {
@@ -19,9 +19,6 @@ class ABMIniciarCompra{
         $fechaactual = date("Y-m-d H:i:s");
         
 
-        /**
-         * Creo una nueva compra
-         */
         $param = array(
             'accion' => 'nuevo', 
             'cofecha' => $fechaactual,  
@@ -146,5 +143,6 @@ class ABMIniciarCompra{
         return $html;
 
 
-    }
-}
+    } }
+    
+*/

@@ -1,32 +1,46 @@
 
 
+const contgeneral = $('#contcarritocomp');
+contgeneral.hide();
 
-    const obtenerCarrito = async () => {
-        const url = './accion/carrito/listar.php';
-        const respuesta = await fetch(url);
-        const carrito = await respuesta.json();
-        return carrito;
-    }
+const cargando = $('#cargando');
+//const linea = $('#linea-arriba');
 
-    const renderizarCarrito = (carrito) => {
-        const contenedor = $('#listaproductos');
+//linea.hide();
 
 
-        
-
-        if (carrito.length == 0 ) {
-            const contGeneral = $('#cont-carrito');
-            const html = `<h3 class='text-white'>No hay productos en el carrito</h3>`;
-            contGeneral.html(html);
-        } else {
-
-            let total = 0;
-            let cardproducto = ``;
-
-            carrito.items.forEach((item, index) => {
 
 
-                cardproducto += `
+const obtenerCarrito = async () => {
+    const url = './accion/carrito/listar.php';
+    const respuesta = await fetch(url);
+    const carrito = await respuesta.json();
+    return carrito;
+}
+
+const renderizarCarrito = (carrito) => {
+
+
+
+
+    const contenedor = $('#listaproductos');
+
+
+
+
+    if (carrito.length == 0) {
+        const contGeneral = $('#cont-carrito');
+        const html = `<h3 class='text-white'>No hay productos en el carrito</h3>`;
+        contGeneral.html(html);
+    } else {
+
+        let total = 0;
+        let cardproducto = ``;
+
+        carrito.items.forEach((item, index) => {
+
+
+            cardproducto += `
                 <!-- Single item -->
                 <div class="row">
                     <div class="col-lg-3 col-md-12 mb-4 mb-lg-0">
@@ -41,7 +55,7 @@
                         <!-- Data -->
                         <p><strong>${item.producto.proNombre}</strong></p>   
                         <p><strong>Precio Unitario: ${formatoNumeroConDolar(item.producto.precio)}</strong></p>             
-                        <button type="button" class="btn btn-danger btn-sm me-1 mb-2" onclick="quitarProducto(${item.idCompraItem}) title="Quitar item"> Quitar
+                        <button type="button" class="btn btn-danger btn-sm me-1 mb-2" onclick="quitarProducto(${item.producto.idProducto})" title="Quitar item"> Quitar
                             <i class="fas fa-trash"></i>
                         </button>
 
@@ -80,29 +94,39 @@
                ${(carrito.items[index + 1] ? `<hr class="mb-4" />` : ``)}
                 `;
 
-                total += item.producto.precio * item.ciCantidad;
-            });
-
-            $('#subtotal').html(formatoNumeroConDolar(total));
-            $('#total').html(formatoNumeroConDolar(total));
-
-            contenedor.html(cardproducto);
-
-        }
-
-
-
-    }
-
-
-    const refrescarCarrito = async () => {
-        obtenerCarrito().then(carrito => {
-            renderizarCarrito(carrito);
+            total += item.producto.precio * item.ciCantidad;
         });
 
+        $('#subtotal').html(formatoNumeroConDolar(total));
+        $('#total').html(formatoNumeroConDolar(total));
+
+        contenedor.html(cardproducto);
+
+        
+
     }
 
-    refrescarCarrito();
+
+
+}
+
+
+const refrescarCarrito = async () => {
+    obtenerCarrito().then(carrito => {
+        $('#cargando').show(100).delay(500);
+        $('#cargando').hide(100).delay(600);
+        setTimeout(function(){
+            renderizarCarrito(carrito);
+            contgeneral.fadeIn();
+            //linea.show(400);
+        }, 500)
+        
+       
+    });
+
+}
+
+refrescarCarrito();
 
 
 
@@ -114,17 +138,17 @@
 
 
 
-const sumarUno = (idcompraitem,idproducto) => {
+const sumarUno = (idcompraitem, idproducto) => {
 
     const item = document.getElementById(`cantidad_item_${idcompraitem}`);
-    const cantidad = Number.parseInt(item.value)+1;
+    const cantidad = Number.parseInt(item.value) + 1;
     Swal.fire({
         title: "Actualizando estado...",
         timer: 300,
-        didOpen: async() => {
+        didOpen: async () => {
             Swal.showLoading();
-            const resp = await cambiarCantidad(idproducto,cantidad)
-            if(resp.status == 200){
+            const resp = await cambiarCantidad(idproducto, cantidad)
+            if (resp.status == 200) {
                 item.stepUp()
                 refrescarCarrito();
                 Swal.close();
@@ -138,37 +162,37 @@ const sumarUno = (idcompraitem,idproducto) => {
 
 }
 
-const restarUno = (idcompraitem,idproducto) => {
-    const item = document.getElementById(`cantidad_item_${idcompraitem}`); 
-    const cantidad = Number.parseInt(item.value)-1;
+const restarUno = (idcompraitem, idproducto) => {
+    const item = document.getElementById(`cantidad_item_${idcompraitem}`);
+    const cantidad = Number.parseInt(item.value) - 1;
     Swal.fire({
         title: "Actualizando estado...",
         timer: 300,
         didOpen: async () => {
             Swal.showLoading();
-             cambiarCantidad(idproducto,cantidad)
-            .then(resp=>{
-                if(resp.status == 200){
-                    item.stepDown();
-                    refrescarCarrito();
-                    Swal.close();
-                }
+            cambiarCantidad(idproducto, cantidad)
+                .then(resp => {
+                    if (resp.status == 200) {
+                        item.stepDown();
+                        refrescarCarrito();
+                        Swal.close();
+                    }
 
-            })
-            .catch(err => console.log(err));
-          
-            
-            
-            
+                })
+                .catch(err => console.log(err));
+
+
+
+
         }
     }).then((result) => {
         /* Read more about handling dismissals below */
 
     });
-    
+
 }
 
-const cambiarCantidad = async (idproducto,cantidad) => {
+const cambiarCantidad = async (idproducto, cantidad) => {
 
     const obj = {
         idProducto: idproducto,
@@ -178,7 +202,7 @@ const cambiarCantidad = async (idproducto,cantidad) => {
     const url = './accion/carrito/modificar.php';
 
     let salida;
-    try{
+    try {
         const resp = await fetch(url, {
             method: 'POST',
             body: JSON.stringify(obj),
@@ -187,9 +211,9 @@ const cambiarCantidad = async (idproducto,cantidad) => {
             }
         })
 
-        
+
         salida = await resp.json();
-        if(salida.status != 200){
+        if (salida.status != 200) {
             Swal.fire({
                 title: salida.message,
                 icon: "error",
@@ -198,22 +222,22 @@ const cambiarCantidad = async (idproducto,cantidad) => {
             })
         }
         return salida;
-    }catch(err){
+    } catch (err) {
         console.log(err);
 
     }
-    
+
 }
 
 
 const vaciarCarrito = async () => {
     const url = './accion/carrito/vaciarCarrito.php';
-    const resp = await fetch(url,{
-        method:'POST'
+    const resp = await fetch(url, {
+        method: 'POST'
     });
     const salida = await resp.json();
 
-    if(salida.status == 200){
+    if (salida.status == 200) {
         Swal.fire({
             title: salida.message,
             icon: "success",
@@ -228,20 +252,77 @@ const vaciarCarrito = async () => {
 
 const enviarCompra = async () => {
     const url = './accion/carrito/iniciarCompra.php';
-    const resp = await fetch(url,{
-        method:'POST'
+    const resp = await fetch(url, {
+        method: 'POST'
     });
     const salida = await resp.json();
 
-    if(salida.status == 200){
+    if (salida.status == 200) {
         Swal.fire({
             title: salida.message,
-            text:"Tu compra paso al área de deposito, podes encontrarla en el menu usuario->mis compras",
+            text: "Tu compra paso al área de deposito, podes encontrarla en el menu usuario->mis compras",
             icon: "success"
         })
         refrescarCarrito();
     }
     //return salida;
+
+}
+
+const quitarProducto = (idproducto) => {
+
+    const obj = {
+        idProducto: idproducto,
+        cantidad: 0
+    }
+
+    const url = './accion/carrito/modificar.php';
+
+
+    Swal.fire({
+        title: "Actualizando estado...",
+        timer: 300,
+        didOpen: async () => {
+            Swal.showLoading();
+            fetch(url, {
+                method: 'POST',
+                body: JSON.stringify(obj),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            }).then(resp => {
+                resp.json().then(data => {
+                    if (data.status != 200) {
+                        Swal.fire({
+                            title: salida.message,
+                            icon: "error",
+                            timer: 2000,
+                            timerProgressBar: true,
+                        })
+                    } else {
+                        refrescarCarrito();
+                        Swal.close();
+                    }
+                })
+            })
+                .catch(err => console.log(err));
+
+        }
+    }).then((result) => {
+        /* Read more about handling dismissals below */
+
+    });
+
+
+
+
+
+
+
+
+
+
+
 
 }
 

@@ -19,6 +19,7 @@ echo <<<HEADER
 
    <link type="text/css" rel="stylesheet" href="{$RUTAVISTA}/css/jsgrid.min.css" />
    <link type="text/css" rel="stylesheet" href="{$RUTAVISTA}/css/jsgrid-theme.min.css" />
+   <link type="text/css" rel="stylesheet" href="{$RUTAVISTA}/css/loader.css" />
 
    <script type="text/javascript" src="{$RUTAVISTA}/js/bootstrap.bundle.min.js"></script>
    <script type="text/javascript" src="{$RUTAVISTA}/js/jquery.js"></script>

@@ -44,10 +44,6 @@ function buscarPorEstado($estado){
 
 function listarCompras(){
     $abmCompra = new AbmCompra();
-    $compra = $abmCompra->buscar(null);
-    $compraJSON = array();
-    foreach ($compra as $compra) {
-        array_push($compraJSON,$compra->jsonSerialize());
-    }
+    $compraJSON = $abmCompra->obtenerComprasPorTodosLosEstados();
     handleResponse($compraJSON);
 }

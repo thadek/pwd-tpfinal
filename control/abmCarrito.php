@@ -62,6 +62,7 @@ class ABMCarrito
 
     /**
      * Devuelve el carrito(ObjetoCompra) del usuario logueado
+     * @return Compra|null
      */
     public function obtenerCarrito()
     {
@@ -80,6 +81,8 @@ class ABMCarrito
 
     /**
      * Verifica si un carrito contiene un producto, si lo contiene devuelve el item, sino null
+     * @param int $idProducto
+     * @return CompraItem|null
      */
     public function verificarProductoEnCarrito($idProducto)
     {
@@ -103,6 +106,9 @@ class ABMCarrito
     /**
      * Modifica la cantidad de un producto en el 
      * carrito del usuario logueado
+     * @param int $idProducto
+     * @param int $cantidad
+     * @return array
      */
     public function setearCantItem($idProducto, $cantidad)
     {
@@ -145,6 +151,11 @@ class ABMCarrito
     }
 
 
+    /**
+     * Elimina un producto del carrito del usuario logueado
+     * @param int $idCompraItem
+     * @return array
+     */
     public function eliminarItem($idCompraItem)
     {
         $abmCompraItem = new AbmCompraItem();

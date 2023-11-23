@@ -1,5 +1,6 @@
 <?php
 
+/*
 class ABMTablaCarrito {
 
     public function eliminarCompra($dato){
@@ -99,5 +100,6 @@ class ABMTablaCarrito {
         $abmCompraEstado->cambiarEstadoDeCompra($ultimaCompra->getIdCompra(),1);
 
        
-    }
+    } 
 }
+*/
